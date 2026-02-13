@@ -154,7 +154,7 @@ export default function MemberFormModal({
               <select
                 value={phoneCountryCode}
                 onChange={(e) => setPhoneCountryCode(e.target.value)}
-                className="w-fit min-w-[4rem] min-h-[44px] px-4 bg-surface-light text-text-main text-base border border-[#333] shrink-0"
+                className="w-32 min-w-32 min-h-[44px] px-4 bg-surface-light text-text-main text-base border border-[#333] shrink-0"
                 aria-label="Country code"
               >
                 {PHONE_COUNTRY_CODES.map((c) => (

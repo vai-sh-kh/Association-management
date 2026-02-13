@@ -69,69 +69,15 @@ function MemberProfilePage() {
   if (isLoading) {
     return (
       <Layout>
-        <div className="max-w-7xl mx-auto flex flex-col gap-6">
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
-            <button
-              type="button"
-              onClick={() => navigate({ to: "/members" })}
-              className="inline-flex items-center gap-2 text-text-secondary hover:text-text-main font-medium text-sm"
-              aria-label="Back to members"
-            >
-              <ArrowLeft size={20} />
-              Back
-            </button>
-            <span className="text-text-muted text-sm">|</span>
-            <nav
-              className="flex items-center gap-2 text-sm text-text-secondary font-medium"
-              aria-label="Breadcrumb"
-            >
-              <Link to="/members" className="hover:text-text-main">
-                Members
-              </Link>
-              <span className="material-symbols-outlined text-sm text-text-muted">
-                chevron_right
-              </span>
-              <span className="text-text-muted">Profile</span>
-            </nav>
-          </div>
-          <div className="flex flex-col gap-6 animate-pulse">
-            <div className="card flex flex-col items-center text-center">
-              <div className="w-[100px] h-[100px] rounded bg-surface-gray mb-4 mt-2" />
-              <div className="h-6 w-40 bg-surface-gray rounded" />
-              <div className="h-4 w-32 bg-surface-gray rounded mt-2 mb-1" />
-              <div className="h-3 w-16 bg-surface-gray rounded mb-6" />
-              <div className="flex flex-wrap gap-3 w-full justify-center">
-                <div className="h-10 w-20 bg-surface-gray rounded" />
-                <div className="h-10 w-28 bg-surface-gray rounded" />
-                <div className="h-10 w-20 bg-surface-gray rounded" />
-              </div>
-            </div>
-            <div className="card">
-              <div className="h-6 w-40 bg-surface-gray rounded mb-6" />
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-surface-gray rounded" />
-                  <div className="h-4 w-48 bg-surface-gray rounded" />
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-surface-gray rounded" />
-                  <div className="h-4 w-32 bg-surface-gray rounded" />
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-surface-gray rounded" />
-                  <div className="h-4 w-36 bg-surface-gray rounded" />
-                </div>
-              </div>
-            </div>
-            <div className="card">
-              <div className="h-6 w-32 bg-surface-gray rounded mb-6" />
-              <div className="grid grid-cols-2 gap-4">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="h-10 bg-surface-gray rounded" />
-                ))}
-              </div>
-            </div>
-          </div>
+        <div className="min-h-[60vh] w-full bg-white flex flex-col items-center justify-center gap-4">
+          <Loader2
+            size={40}
+            className="animate-spin text-primary"
+            aria-hidden
+          />
+          <span className="text-sm font-medium text-text-secondary">
+            Loading…
+          </span>
         </div>
       </Layout>
     );
@@ -191,182 +137,186 @@ function MemberProfilePage() {
 
   return (
     <Layout>
-       <div className="w-full flex justify-center">
-       <div className=" max-w-[1000px]  w-full flex flex-col gap-6">
-        <div className="flex flex-wrap w-full items-center gap-2 sm:gap-3 mb-2">
-          <button
-            type="button"
-            onClick={() => navigate({ to: "/members" })}
-            className="inline-flex items-center gap-2 text-text-secondary hover:text-text-main font-medium text-sm"
-            aria-label="Back to members"
-          >
-            <ArrowLeft size={20} />
-            Back
-          </button>
-          <span className="text-text-muted text-sm">|</span>
-          <nav
-            className="flex items-center gap-2 text-sm text-text-secondary font-medium"
-            aria-label="Breadcrumb"
-          >
-            <Link to="/members" className="hover:text-text-main">
-              Members
-            </Link>
-            <span className="material-symbols-outlined text-sm text-text-muted">
-              chevron_right
-            </span>
-            <span className="text-text-main font-semibold truncate max-w-[200px] sm:max-w-none">
-              {member.name}
-            </span>
-          </nav>
-        </div>
-        <div className="w-full bg-red-800">
-          <div className="card flex flex-col items-center text-center">
-            <div className="relative mb-4 mt-2">
-              <div className="w-[100px] h-[100px] p-1 bg-surface-light border border-[#333] overflow-hidden">
-                {member.avatar_url ? (
-                  <img
-                    alt=""
-                    className="w-full h-full object-cover"
-                    src={member.avatar_url}
-                  />
+      <div className="w-full flex justify-center">
+        <div className=" max-w-[1000px]  w-full flex flex-col gap-6">
+          <div className="flex flex-wrap w-full items-center gap-2 sm:gap-3 mb-2">
+            <button
+              type="button"
+              onClick={() => navigate({ to: "/members" })}
+              className="inline-flex items-center gap-2 text-text-secondary hover:text-text-main font-medium text-sm"
+              aria-label="Back to members"
+            >
+              <ArrowLeft size={20} />
+              Back
+            </button>
+            <span className="text-text-muted text-sm">|</span>
+            <nav
+              className="flex items-center gap-2 text-sm text-text-secondary font-medium"
+              aria-label="Breadcrumb"
+            >
+              <Link to="/members" className="hover:text-text-main">
+                Members
+              </Link>
+              <span className="material-symbols-outlined text-sm text-text-muted">
+                chevron_right
+              </span>
+              <span className="text-text-main font-semibold truncate max-w-[200px] sm:max-w-none">
+                {member.name}
+              </span>
+            </nav>
+          </div>
+          <div className="w-full bg-red-800">
+            <div className="card flex flex-col items-center text-center">
+              <div className="relative mb-4 mt-2">
+                <div className="w-[100px] h-[100px] p-1 bg-surface-light border border-[#333] overflow-hidden">
+                  {member.avatar_url ? (
+                    <img
+                      alt=""
+                      className="w-full h-full object-cover"
+                      src={member.avatar_url}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-bold">
+                      {initials}
+                    </div>
+                  )}
+                </div>
+                <span className="absolute bottom-1 right-1 w-5 h-5 bg-success border-2 border-white" />
+              </div>
+              <h2 className="text-xl font-bold text-text-main">
+                {member.name}
+              </h2>
+              {(member.unit != null && member.unit !== "") ||
+              member.member_type ? (
+                <p className="text-text-secondary text-sm font-medium mt-1 mb-1">
+                  {[member.unit, member.member_type]
+                    .filter(Boolean)
+                    .join(" • ")}
+                </p>
+              ) : null}
+              {member.member_id != null && member.member_id !== "" ? (
+                <p className="text-xs text-text-muted mb-6">
+                  ID {member.member_id}
+                </p>
+              ) : (
+                <div className="mb-6" />
+              )}
+
+              <div className="flex flex-wrap gap-3 w-full justify-center">
+                <button
+                  type="button"
+                  onClick={() => setEditModal(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-background-light text-primary hover:bg-primary hover:text-white font-medium text-sm"
+                >
+                  <span className="material-symbols-outlined text-[20px]">
+                    edit
+                  </span>
+                  Edit
+                </button>
+                {member.id_card_created ? (
+                  <Link
+                    to="/id-card-studio"
+                    search={{ memberId }}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-background-light text-primary hover:bg-primary hover:text-white font-medium text-sm"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">
+                      badge
+                    </span>
+                    View ID Card
+                  </Link>
                 ) : (
-                  <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-bold">
-                    {initials}
+                  <Link
+                    to="/id-card-studio"
+                    search={{ memberId }}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-background-light text-primary hover:bg-primary hover:text-white font-medium text-sm"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">
+                      add_card
+                    </span>
+                    Create ID
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setDeleteConfirm(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-danger/10 text-danger hover:bg-danger hover:text-white font-medium text-sm"
+                >
+                  <span className="material-symbols-outlined text-[20px]">
+                    delete
+                  </span>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {(member.email != null && member.email !== "") ||
+          (member.phone != null && member.phone !== "") ||
+          (member.phone_country_code != null &&
+            member.phone_country_code !== "") ||
+          emergencyContact !== "—" ? (
+            <div className="card">
+              <div className="flex flex-col gap-6">
+                {member.email != null && member.email !== "" && (
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-background-light flex items-center justify-center text-primary shrink-0">
+                      <span className="material-symbols-outlined text-xl">
+                        mail
+                      </span>
+                    </div>
+                    <div className="flex flex-col pt-1">
+                      <span className="text-xs text-text-secondary font-medium mb-1">
+                        Email
+                      </span>
+                      <span className="text-sm font-bold text-text-main break-all">
+                        {member.email}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                {(member.phone != null && member.phone !== "") ||
+                (member.phone_country_code != null &&
+                  member.phone_country_code !== "") ? (
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-background-light flex items-center justify-center text-primary shrink-0">
+                      <span className="material-symbols-outlined text-xl">
+                        smartphone
+                      </span>
+                    </div>
+                    <div className="flex flex-col pt-1">
+                      <span className="text-xs text-text-secondary font-medium mb-1">
+                        Mobile
+                      </span>
+                      <span className="text-sm font-bold text-text-main">
+                        {formatPhoneDisplay(
+                          member.phone_country_code,
+                          member.phone,
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                ) : null}
+                {emergencyContact !== "—" && (
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-background-light flex items-center justify-center text-primary shrink-0">
+                      <span className="material-symbols-outlined text-xl">
+                        emergency
+                      </span>
+                    </div>
+                    <div className="flex flex-col pt-1">
+                      <span className="text-xs text-text-secondary font-medium mb-1">
+                        Emergency Contact
+                      </span>
+                      <span className="text-sm font-bold text-text-main">
+                        {emergencyContact}
+                      </span>
+                    </div>
                   </div>
                 )}
               </div>
-              <span className="absolute bottom-1 right-1 w-5 h-5 bg-success border-2 border-white" />
             </div>
-            <h2 className="text-xl font-bold text-text-main">{member.name}</h2>
-            {(member.unit != null && member.unit !== "") ||
-            member.member_type ? (
-              <p className="text-text-secondary text-sm font-medium mt-1 mb-1">
-                {[member.unit, member.member_type].filter(Boolean).join(" • ")}
-              </p>
-            ) : null}
-            {member.member_id != null && member.member_id !== "" ? (
-              <p className="text-xs text-text-muted mb-6">
-                ID {member.member_id}
-              </p>
-            ) : (
-              <div className="mb-6" />
-            )}
-
-            <div className="flex flex-wrap gap-3 w-full justify-center">
-              <button
-                type="button"
-                onClick={() => setEditModal(true)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-background-light text-primary hover:bg-primary hover:text-white font-medium text-sm"
-              >
-                <span className="material-symbols-outlined text-[20px]">
-                  edit
-                </span>
-                Edit
-              </button>
-              {member.id_card_created ? (
-                <Link
-                  to="/id-card-studio"
-                  search={{ memberId }}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-background-light text-primary hover:bg-primary hover:text-white font-medium text-sm"
-                >
-                  <span className="material-symbols-outlined text-[20px]">
-                    badge
-                  </span>
-                  View ID Card
-                </Link>
-              ) : (
-                <Link
-                  to="/id-card-studio"
-                  search={{ memberId }}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-background-light text-primary hover:bg-primary hover:text-white font-medium text-sm"
-                >
-                  <span className="material-symbols-outlined text-[20px]">
-                    add_card
-                  </span>
-                  Create ID
-                </Link>
-              )}
-              <button
-                type="button"
-                onClick={() => setDeleteConfirm(true)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-danger/10 text-danger hover:bg-danger hover:text-white font-medium text-sm"
-              >
-                <span className="material-symbols-outlined text-[20px]">
-                  delete
-                </span>
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {(member.email != null && member.email !== "") ||
-        (member.phone != null && member.phone !== "") ||
-        (member.phone_country_code != null &&
-          member.phone_country_code !== "") ||
-        emergencyContact !== "—" ? (
-          <div className="card">
-            <div className="flex flex-col gap-6">
-              {member.email != null && member.email !== "" && (
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-background-light flex items-center justify-center text-primary shrink-0">
-                    <span className="material-symbols-outlined text-xl">
-                      mail
-                    </span>
-                  </div>
-                  <div className="flex flex-col pt-1">
-                    <span className="text-xs text-text-secondary font-medium mb-1">
-                      Email
-                    </span>
-                    <span className="text-sm font-bold text-text-main break-all">
-                      {member.email}
-                    </span>
-                  </div>
-                </div>
-              )}
-              {(member.phone != null && member.phone !== "") ||
-              (member.phone_country_code != null &&
-                member.phone_country_code !== "") ? (
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-background-light flex items-center justify-center text-primary shrink-0">
-                    <span className="material-symbols-outlined text-xl">
-                      smartphone
-                    </span>
-                  </div>
-                  <div className="flex flex-col pt-1">
-                    <span className="text-xs text-text-secondary font-medium mb-1">
-                      Mobile
-                    </span>
-                    <span className="text-sm font-bold text-text-main">
-                      {formatPhoneDisplay(
-                        member.phone_country_code,
-                        member.phone,
-                      )}
-                    </span>
-                  </div>
-                </div>
-              ) : null}
-              {emergencyContact !== "—" && (
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-background-light flex items-center justify-center text-primary shrink-0">
-                    <span className="material-symbols-outlined text-xl">
-                      emergency
-                    </span>
-                  </div>
-                  <div className="flex flex-col pt-1">
-                    <span className="text-xs text-text-secondary font-medium mb-1">
-                      Emergency Contact
-                    </span>
-                    <span className="text-sm font-bold text-text-main">
-                      {emergencyContact}
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : null}
-{/* 
+          ) : null}
+          {/* 
         {hasAnyDetail && (
           <div className="card">
             <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
@@ -566,8 +516,8 @@ function MemberProfilePage() {
             </dl>
           </div>
         )} */}
+        </div>
       </div>
-       </div>
 
       {editModal && (
         <MemberFormSheet

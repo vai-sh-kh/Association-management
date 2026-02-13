@@ -40,6 +40,8 @@ import {
   FileSpreadsheet,
   UsersRound,
   Check,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { exportMembersCSV, exportMembersExcel } from "../lib/exportMembers";
 import { formatPhoneDisplay } from "../constants/countryCodes";
@@ -47,20 +49,6 @@ import { formatPhoneDisplay } from "../constants/countryCodes";
 export const Route = createFileRoute("/members")({
   component: Members,
 });
-
-function formatLastAccess(ts: string | null): string {
-  if (!ts) return "N/A";
-  const d = new Date(ts);
-  const now = new Date();
-  const diffMs = now.getTime() - d.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-  if (diffMins < 60) return `${diffMins} mins ago`;
-  if (diffHours < 24) return `${diffHours} hours ago`;
-  if (diffDays < 30) return `${diffDays} days ago`;
-  return d.toLocaleDateString();
-}
 
 function getStatusStyles(status: string) {
   switch (status) {
@@ -344,59 +332,105 @@ function Members() {
           </h2>
         </div>
         <div className="flex flex-wrap items-center gap-3 min-w-0 md:justify-end">
-          <div className="relative bg-surface-light h-11 flex items-center px-4 w-full md:w-[400px] shrink-0">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">
-              search
-            </span>
-            <input
-              className="block w-full pl-9 pr-4 py-0 h-full bg-transparent border-none text-base text-text-main placeholder-text-muted focus:ring-0"
-              placeholder="Search name, email..."
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="h-11 min-w-[120px] px-3 bg-surface-light border border-[#333] text-text-main text-sm rounded focus:outline-none focus:ring-2 focus:ring-primary/30"
-            aria-label="Filter by status"
-          >
-            <option value="">Status: All</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
-          <select
-            value={idCardSortValue}
-            onChange={(e) => handleIdCardSortChange(e.target.value)}
-            className="h-11 min-w-[160px] px-3 bg-surface-light border border-[#333] text-text-main text-sm rounded focus:outline-none focus:ring-2 focus:ring-primary/30"
-            aria-label="Filter by ID card (created / not created)"
-          >
-            <option value="">ID Card: All</option>
-            <option value="created">ID Card: Created only</option>
-            <option value="not_created">ID Card: Not created only</option>
-          </select>
-          {(filterStatus || filterIdCard) && (
-            <>
-              <span className="text-sm text-text-secondary">
-                Selected: {filterLabel}
-              </span>
+          {/* Desktop: search + Status All + Add in one flex; then ID Card, Clear, export */}
+          <div className="hidden md:flex flex-wrap items-center gap-3 min-w-0">
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="relative bg-surface-light h-11 flex items-center px-4 w-[400px] shrink-0">
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">
+                  search
+                </span>
+                <input
+                  className="block w-full pl-9 pr-4 py-0 h-full bg-transparent border-none text-base text-text-main placeholder-text-muted focus:ring-0"
+                  placeholder="Search name, email..."
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="h-11 min-w-[120px] px-3 bg-surface-light border border-[#333] text-text-main text-sm rounded focus:outline-none focus:ring-2 focus:ring-primary/30"
+                aria-label="Filter by status"
+              >
+                <option value="">Status: All</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
               <button
                 type="button"
                 onClick={() => {
-                  setFilterStatus("");
-                  setFilterIdCard("");
+                  setSheet("add");
+                  setFormError(null);
                 }}
-                className="h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray/50"
+                className="btn-primary flex items-center gap-2 shrink-0"
               >
-                Clear
+                <span className="material-symbols-outlined text-[18px]">
+                  add
+                </span>
+                Add Member
               </button>
-            </>
-          )}
+            </div>
+            <select
+              value={idCardSortValue}
+              onChange={(e) => handleIdCardSortChange(e.target.value)}
+              className="h-11 min-w-[160px] px-3 bg-surface-light border border-[#333] text-text-main text-sm rounded focus:outline-none focus:ring-2 focus:ring-primary/30"
+              aria-label="Filter by ID card (created / not created)"
+            >
+              <option value="">ID Card: All</option>
+              <option value="created">ID Card: Created only</option>
+              <option value="not_created">ID Card: Not created only</option>
+            </select>
+            {(filterStatus || filterIdCard) && (
+              <>
+                <span className="text-sm text-text-secondary">
+                  Selected: {filterLabel}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFilterStatus("");
+                    setFilterIdCard("");
+                  }}
+                  className="h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray/50"
+                >
+                  Clear
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Mobile: search bar + Add button only */}
+          <div className="flex md:hidden items-stretch gap-3 w-full min-w-0">
+            <div className="relative bg-surface-light h-11 flex items-center px-4 flex-1 min-w-0 rounded border border-[#333]">
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">
+                search
+              </span>
+              <input
+                className="block w-full pl-9 pr-4 py-0 h-full bg-transparent border-none text-base text-text-main placeholder-text-muted focus:ring-0"
+                placeholder="Search name, email..."
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setSheet("add");
+                setFormError(null);
+              }}
+              className="btn-primary h-11 w-11 min-w-11 flex items-center justify-center shrink-0 rounded border border-transparent"
+              aria-label="Add Member"
+            >
+              <span className="material-symbols-outlined text-[22px]">add</span>
+            </button>
+          </div>
+
           <button
             type="button"
             onClick={handleExportCSV}
-            className="h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray/50 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="hidden md:flex h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray/50 items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
             title="Export as CSV"
           >
             <FileDown size={18} />
@@ -405,22 +439,11 @@ function Members() {
           <button
             type="button"
             onClick={handleExportExcel}
-            className="h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray/50 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="hidden md:flex h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray/50 items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
             title="Export as Excel"
           >
             <FileSpreadsheet size={18} />
             Excel
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSheet("add");
-              setFormError(null);
-            }}
-            className="btn-primary flex items-center gap-2"
-          >
-            <span className="material-symbols-outlined text-[18px]">add</span>
-            Add Member
           </button>
         </div>
       </div>
@@ -683,9 +706,6 @@ function Members() {
                 <th className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray/50">
                   Mobile
                 </th>
-                <th className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray/50">
-                  Last Access
-                </th>
                 <th
                   className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray/50 cursor-pointer hover:bg-surface-gray/80 select-none"
                   onClick={(e) => {
@@ -734,7 +754,7 @@ function Members() {
             <tbody className="divide-y divide-[#333] bg-surface-light">
               {isLoading && (
                 <tr>
-                  <td colSpan={10} className="p-0">
+                  <td colSpan={9} className="p-0">
                     <div className="flex flex-col items-center justify-center py-16 px-4">
                       <Loader2
                         size={40}
@@ -751,7 +771,7 @@ function Members() {
               {isError && !isLoading && (
                 <tr>
                   <td
-                    colSpan={10}
+                    colSpan={9}
                     className="py-12 text-center text-danger font-medium"
                   >
                     {(error as Error)?.message ?? "Failed to load members"}
@@ -760,7 +780,7 @@ function Members() {
               )}
               {!isLoading && !isError && filteredMembers.length === 0 && (
                 <tr>
-                  <td colSpan={10} className="p-0">
+                  <td colSpan={9} className="p-0">
                     <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
                       <UsersRound
                         size={64}
@@ -849,17 +869,6 @@ function Members() {
                         member.phone_country_code,
                         member.phone,
                       )}
-                    </td>
-                    <td className="py-3 px-2 whitespace-nowrap">
-                      <div className="flex items-center text-sm font-medium text-text-main">
-                        <span className="material-symbols-outlined text-[16px] mr-1.5 text-text-secondary filled">
-                          schedule
-                        </span>
-                        {formatLastAccess(member.last_access)}
-                      </div>
-                      <div className="text-xs text-text-secondary pl-6">
-                        {member.last_access_location ?? "—"}
-                      </div>
                     </td>
                     <td className="py-3 px-2 whitespace-nowrap text-sm text-text-secondary">
                       {member.created_at
@@ -981,29 +990,34 @@ function Members() {
         </div>
 
         {!isLoading && !isError && members.length > 0 && (
-          <div className="mt-auto shrink-0 w-full min-h-[56px] py-4 px-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#333] bg-white">
-            <div className="flex flex-wrap items-center gap-4">
-              <p className="text-sm text-text-secondary font-medium">
+          <div className="mt-auto shrink-0 w-full py-4 px-4 flex flex-wrap items-center justify-center md:justify-between gap-4 border-t border-[#333] bg-white">
+            <div className="hidden md:flex flex-wrap items-center gap-4 sm:gap-6">
+              <p className="text-sm text-text-secondary">
                 Showing{" "}
-                <span className="font-bold text-text-main">
+                <span className="font-semibold text-text-main">
                   {(currentPage - 1) * pageSize + 1}–
                   {Math.min(currentPage * pageSize, filteredMembers.length)}
                 </span>{" "}
                 of{" "}
-                <span className="font-bold text-text-main">
+                <span className="font-semibold text-text-main">
                   {filteredMembers.length}
                 </span>{" "}
                 result{filteredMembers.length !== 1 ? "s" : ""}
               </p>
               <label className="flex items-center gap-2 text-sm text-text-secondary">
-                Rows per page
+                <span>Rows per page</span>
                 <select
                   value={pageSize}
                   onChange={(e) => {
                     setPageSize(Number(e.target.value));
                     setPage(1);
                   }}
-                  className="min-h-[36px] px-2 py-1.5 bg-surface-light border border-[#333] text-text-main font-medium rounded focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="h-9 min-w-16 pl-3 pr-8 bg-surface-light border border-[#333] text-text-main text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary appearance-none cursor-pointer"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right 0.5rem center",
+                  }}
                 >
                   {pageSizeOptions.map((n) => (
                     <option key={n} value={n}>
@@ -1013,28 +1027,36 @@ function Members() {
                 </select>
               </label>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <button
                 type="button"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage <= 1}
-                className="min-h-[36px] px-3 text-sm font-semibold border border-[#333] bg-transparent text-text-main hover:bg-surface-gray/50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="inline-flex items-center gap-1.5 h-9 px-3 text-sm font-medium rounded-md border border-[#333] bg-surface-light text-text-main hover:bg-surface-gray hover:border-[#333] disabled:opacity-50 disabled:pointer-events-none disabled:bg-surface-gray/50 disabled:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:ring-offset-1"
+                aria-label="Previous page"
               >
+                <ChevronLeft size={18} />
                 Previous
               </button>
-              <span className="text-sm text-text-secondary px-2">
+              <span className="min-w-28 text-center text-sm text-text-secondary px-3 py-2">
                 Page{" "}
-                <span className="font-bold text-text-main">{currentPage}</span>{" "}
+                <span className="font-semibold text-text-main">
+                  {currentPage}
+                </span>{" "}
                 of{" "}
-                <span className="font-bold text-text-main">{totalPages}</span>
+                <span className="font-semibold text-text-main">
+                  {totalPages}
+                </span>
               </span>
               <button
                 type="button"
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage >= totalPages}
-                className="min-h-[36px] px-3 text-sm font-semibold border border-[#333] bg-transparent text-text-main hover:bg-surface-gray/50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="inline-flex items-center gap-1.5 h-9 px-3 text-sm font-medium rounded-md border border-[#333] bg-surface-light text-text-main hover:bg-surface-gray hover:border-[#333] disabled:opacity-50 disabled:pointer-events-none disabled:bg-surface-gray/50 disabled:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:ring-offset-1"
+                aria-label="Next page"
               >
                 Next
+                <ChevronRight size={18} />
               </button>
             </div>
           </div>

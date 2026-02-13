@@ -228,7 +228,7 @@ export default function MemberFormSheet({
               <select
                 value={phoneCountryCode}
                 onChange={(e) => setPhoneCountryCode(e.target.value)}
-                className={`${INPUT_CLASS} w-fit min-w-[4rem] shrink-0`}
+                className={`${INPUT_CLASS} w-32! min-w-32! shrink-0`}
                 aria-label="Country code"
               >
                 {PHONE_COUNTRY_CODES.map((c) => (
@@ -241,7 +241,7 @@ export default function MemberFormSheet({
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="e.g. 555 123 4567"
+                placeholder="e.g. 849222626"
                 className={`${INPUT_CLASS} flex-1 min-w-0`}
                 aria-invalid={!!fieldErrors.phone}
                 aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
