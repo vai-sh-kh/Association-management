@@ -1,17 +1,15 @@
 import { useState, useMemo, useEffect } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import Layout from "../components/layout/Layout";
 import {
   fetchMemberById,
   fetchMembers,
-  updateMember,
   memberQueryKey,
   membersQueryKey,
 } from "../lib/api/members";
-import { dashboardQueryKey } from "../lib/api/dashboard";
 import type { Member } from "../lib/supabase";
-import { Check } from "lucide-react";
+import { Check, ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/id-card-studio")({
   component: IDCardStudio,
@@ -264,7 +262,7 @@ function MemberSelectorSection({
 
 function IDCardStudio() {
   const { memberId } = Route.useSearch();
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [sortBy, setSortBy] = useState<SortField>("created_at");
@@ -276,7 +274,12 @@ function IDCardStudio() {
     queryFn: () => fetchMembers(),
   });
 
-  const { data: member, isLoading } = useQuery({
+  const {
+    data: member,
+    isLoading,
+    isError: isMemberError,
+    error: memberError,
+  } = useQuery({
     queryKey: memberQueryKey(memberId ?? ""),
     queryFn: () => fetchMemberById(memberId!),
     enabled: !!memberId,
@@ -339,66 +342,65 @@ function IDCardStudio() {
         .toUpperCase()
     : "—";
 
-  const markIdCreatedMutation = useMutation({
-    mutationFn: () =>
-      memberId
-        ? updateMember(memberId, { id_card_created: true })
-        : Promise.reject(new Error("No member")),
-    onSuccess: () => {
-      if (memberId) {
-        queryClient.invalidateQueries({ queryKey: memberQueryKey(memberId) });
-        queryClient.invalidateQueries({ queryKey: membersQueryKey });
-        queryClient.invalidateQueries({ queryKey: dashboardQueryKey });
-      }
-    },
-  });
-
-  const handleIssueMobilePass = () => markIdCreatedMutation.mutate();
-  const handleDownloadPdf = () => markIdCreatedMutation.mutate();
-
   return (
     <Layout>
       <div className="flex flex-col gap-6">
-        {/* Header - same as Dashboard */}
-        <div className="card">
-          <div className="flex items-center gap-2 text-text-secondary text-sm font-medium mb-1">
-            <span>Pages</span>
-            <span className="text-text-muted">/</span>
-            <span className="text-primary font-bold">ID Card Studio</span>
-          </div>
-          <h1 className="text-text-main text-2xl md:text-3xl font-bold mb-1 tracking-tight">
-            ID Card Studio
-          </h1>
-          <p className="text-text-secondary text-sm">
-            View and manage digital ID cards for members with an issued card.
-          </p>
-        </div>
-
         {!memberId && (
-          <div>
-            <MemberSelectorSection
-              sectionTitle="Members with ID card"
-              members={paginatedMembers}
-              selectedMemberId={undefined}
-              search={search}
-              onSearchChange={setSearch}
-              filterStatus={filterStatus}
-              onFilterStatusChange={setFilterStatus}
-              sortBy={sortBy}
-              sortOrder={sortOrder}
-              onSortByChange={setSortBy}
-              onSortOrderChange={setSortOrder}
-              page={page}
-              totalCount={filteredAndSortedMembers.length}
-              onPageChange={setPage}
-            />
-          </div>
+          <>
+            {/* Header - when no member selected */}
+            <div className="card">
+              <div className="flex items-center gap-2 text-text-secondary text-sm font-medium mb-1">
+                <span>Pages</span>
+                <span className="text-text-muted">/</span>
+                <span className="text-primary font-bold">ID Card Studio</span>
+              </div>
+              <h1 className="text-text-main text-2xl md:text-3xl font-bold mb-1 tracking-tight">
+                ID Card Studio
+              </h1>
+              <p className="text-text-secondary text-sm">
+                View and manage digital ID cards for members with an issued
+                card.
+              </p>
+            </div>
+
+            <div>
+              <MemberSelectorSection
+                sectionTitle="Members with ID card"
+                members={paginatedMembers}
+                selectedMemberId={undefined}
+                search={search}
+                onSearchChange={setSearch}
+                filterStatus={filterStatus}
+                onFilterStatusChange={setFilterStatus}
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                onSortByChange={setSortBy}
+                onSortOrderChange={setSortOrder}
+                page={page}
+                totalCount={filteredAndSortedMembers.length}
+                onPageChange={setPage}
+              />
+            </div>
+          </>
         )}
 
         {memberId && !member && !isLoading && (
           <>
             <div className="card p-8 text-center text-text-secondary text-base">
-              <p className="mb-4">Member not found.</p>
+              {isMemberError ? (
+                <>
+                  <p className="mb-2 font-medium text-danger">
+                    Failed to load member
+                  </p>
+                  <p className="mb-4 text-sm text-text-muted">
+                    {memberError instanceof Error
+                      ? memberError.message
+                      : "Network or server error. Check the console for details."}
+                  </p>
+                </>
+              ) : (
+                <p className="mb-4">Member not found.</p>
+              )}
               <Link
                 to="/id-card-studio"
                 className="text-primary font-bold hover:underline"
@@ -428,65 +430,105 @@ function IDCardStudio() {
         )}
 
         {(isLoading || member) && memberId && (
-          <div className="flex flex-col items-center justify-center min-h-[400px]">
-            {isLoading ? (
-              <div className="text-text-muted animate-pulse">Loading card...</div>
-            ) : member ? (
-              <>
-                <div className="flex flex-col items-center justify-center w-full max-w-[280px]">
-                  <div className="relative w-full overflow-hidden flex flex-col bg-surface-light border border-[#333] shadow-sm">
-                    <div className="h-28 bg-primary p-4 flex justify-between items-start text-white">
-                      <span className="font-bold text-[10px] tracking-wider uppercase">
-                        Association
-                      </span>
-                      <span className="text-[10px] font-bold uppercase bg-white/20 px-2 py-0.5">
-                        Member
-                      </span>
-                    </div>
-                    <div className="flex flex-col items-center px-6 pb-6 -mt-10">
-                      <div className="h-20 w-20 overflow-hidden bg-surface-gray flex items-center justify-center">
-                        {avatarUrl ? (
-                          <img
-                            alt=""
-                            className="h-full w-full object-cover"
-                            src={avatarUrl}
-                          />
-                        ) : (
-                          <span className="text-primary font-bold text-2xl">
-                            {initialsStr}
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-3 text-lg font-bold text-text-main tracking-tight text-center">
-                        {displayName}
-                      </p>
-                      <p className="text-sm text-text-secondary mt-0.5">
-                        {unitLabel}
-                      </p>
-                      <p className="mt-3 text-xs font-semibold text-primary uppercase tracking-wider">
-                        All Amenities Access
-                      </p>
-                      <div className="mt-4 p-2 bg-surface-gray">
-                        <img
-                          alt="QR"
-                          className="h-16 w-16"
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6HA8CUcBOCRJAHfQJOxSdV2gO_s-Op6h2k13anBOTSid0Tc6aE9fO26s4_0qlSYCSYy1_0PLlxgcTqWNu3qGzfNmAljUdMTWmTnQ3zd3o5C1CArXYuMO29UZZU2VVYrxXUR8KMMQj2u8K7KnyadHItpiOEBbOeTDNh-iqDMLRwMBRrYf42THxxhF9exhDvgjg43Fl8krhXoa_tHcemzyt3a519Kwf-vQ28IBSV0uWfUwXmjQbCGa1d-hWro9zl4p3wiUX835wcNnV"
-                        />
-                      </div>
-                      <p className="text-[10px] text-text-muted mt-2 uppercase tracking-wide">
-                        Scan for entry
-                      </p>
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-wrap w-full items-center gap-2 sm:gap-3 mb-2">
+              <button
+                type="button"
+                onClick={() => navigate({ to: "/id-card-studio" })}
+                className="inline-flex items-center gap-2 text-text-secondary hover:text-text-main font-medium text-sm"
+                aria-label="Back to ID Card Studio"
+              >
+                <ArrowLeft size={20} />
+                Back
+              </button>
+              <span className="text-text-muted text-sm">|</span>
+              <nav
+                className="flex items-center gap-2 text-sm text-text-secondary font-medium"
+                aria-label="Breadcrumb"
+              >
+                <Link to="/id-card-studio" className="hover:text-text-main">
+                  ID Card Studio
+                </Link>
+                <span className="material-symbols-outlined text-sm text-text-muted">
+                  chevron_right
+                </span>
+                <span className="text-text-main font-semibold truncate max-w-[200px] sm:max-w-none">
+                  {isLoading ? "Loading…" : (member?.name ?? "ID Card")}
+                </span>
+              </nav>
+            </div>
+            <div className="flex flex-col items-center justify-center min-h-[calc(100vh-12rem)] py-10">
+              {isLoading ? (
+                <div className="flex flex-col items-center justify-center w-full max-w-[420px] mx-auto">
+                  <div className="relative w-full overflow-hidden flex flex-col bg-surface-light border-2 border-[#333] shadow-lg animate-pulse">
+                    <div className="h-36 bg-surface-gray" />
+                    <div className="flex flex-col items-center px-8 pb-8 -mt-12">
+                      <div className="h-28 w-28 rounded-full bg-surface-gray border-4 border-white shadow-md" />
+                      <div className="h-6 w-48 bg-surface-gray rounded mt-4" />
+                      <div className="h-4 w-32 bg-surface-gray rounded mt-2" />
+                      <div className="h-4 w-40 bg-surface-gray rounded mt-4" />
+                      <div className="mt-6 p-3 bg-surface-gray h-32 w-32" />
+                      <div className="h-3 w-24 bg-surface-gray rounded mt-3" />
                     </div>
                   </div>
                 </div>
-                <Link
-                  to="/id-card-studio"
-                  className="mt-8 text-sm font-semibold text-primary hover:underline"
-                >
-                  Back to ID Card Studio
-                </Link>
-              </>
-            ) : null}
+              ) : member ? (
+                <>
+                  <div className="flex flex-col items-center justify-center w-full max-w-[420px] mx-auto">
+                    <div className="relative w-full overflow-hidden flex flex-col bg-surface-light border-2 border-[#333] shadow-lg">
+                      <div className="h-36 bg-primary p-5 flex justify-between items-start text-white">
+                        <span className="font-bold text-xs tracking-wider uppercase">
+                          Association
+                        </span>
+                        <span className="text-xs font-bold uppercase bg-white/20 px-2.5 py-1">
+                          Member
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center px-8 pb-8 -mt-12">
+                        <div className="h-28 w-28 overflow-hidden bg-surface-gray flex items-center justify-center rounded-full border-4 border-white shadow-md">
+                          {avatarUrl ? (
+                            <img
+                              alt=""
+                              className="h-full w-full object-cover"
+                              src={avatarUrl}
+                            />
+                          ) : (
+                            <span className="text-primary font-bold text-3xl">
+                              {initialsStr}
+                            </span>
+                          )}
+                        </div>
+                        <p className="mt-4 text-xl font-bold text-text-main tracking-tight text-center">
+                          {displayName}
+                        </p>
+                        <p className="text-base text-text-secondary mt-1">
+                          {unitLabel}
+                        </p>
+                        <p className="mt-4 text-sm font-semibold text-primary uppercase tracking-wider">
+                          All Amenities Access
+                        </p>
+                        <div className="mt-6 p-3 bg-white border border-surface-gray">
+                          <img
+                            alt="QR code for member entry"
+                            className="h-32 w-32 block"
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(member.id)}`}
+                          />
+                        </div>
+                        <p className="text-xs text-text-muted mt-3 uppercase tracking-wide">
+                          Scan for entry
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <Link
+                    to="/id-card-studio"
+                    className="mt-8 text-sm font-semibold text-primary hover:underline"
+                  >
+                    Back to ID Card Studio
+                  </Link>
+                </>
+              ) : null}
+            </div>
           </div>
         )}
       </div>

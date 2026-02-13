@@ -121,7 +121,7 @@ function Dashboard() {
                         <Icon size={22} className={stat.color} />
                       </div>
                     </div>
-                    <h3 className="text-2xl md:text-[28px] font-bold text-text-main mb-0.5 leading-tight">
+                    <h3 className="text-4xl md:text-5xl font-bold text-text-main mb-0.5 leading-tight">
                       {stat.value}
                     </h3>
                     <p className="text-sm text-text-secondary font-medium">
@@ -138,8 +138,8 @@ function Dashboard() {
           <div className="col-span-12 lg:col-span-8 flex flex-col gap-5">
             {/* Recent Members */}
             <div className="card">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-text-main font-bold text-lg">
+              <div className="flex justify-between items-center pb-2 border-b border-black mb-4">
+                <h3 className="text-text-main font-bold text-base">
                   Recent Members
                 </h3>
                 <Link
@@ -149,13 +149,13 @@ function Dashboard() {
                   View All
                 </Link>
               </div>
-              <div className="min-h-[320px]">
+              <div className="min-h-[240px]">
                 {recentLoading ? (
-                  <div className="space-y-3">
+                  <div className="space-y-0 divide-y divide-surface-gray/80">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <div
                         key={i}
-                        className="flex items-center justify-between py-2 animate-pulse"
+                        className="flex items-center justify-between py-2.5 animate-pulse"
                       >
                         <div className="h-4 w-32 bg-surface-gray rounded" />
                         <div className="h-4 w-16 bg-surface-gray rounded" />
@@ -188,29 +188,26 @@ function Dashboard() {
                             });
                           }
                         }}
-                        className="flex items-center gap-3 py-4 first:pt-0 cursor-pointer hover:bg-surface-gray/50 transition-colors"
+                        className="flex items-center gap-3 py-2.5 first:pt-0 cursor-pointer hover:bg-surface-gray/50 transition-colors"
                       >
-                        <div className="shrink-0 h-10 w-10 overflow-hidden bg-surface-gray flex items-center justify-center">
+                        <div className="shrink-0 h-12 w-12 overflow-hidden bg-surface-gray flex items-center justify-center">
                           {member.avatar_url ? (
                             <img
                               alt=""
-                              className="h-10 w-10 object-cover"
+                              className="h-8 w-8 object-cover"
                               src={member.avatar_url}
                             />
                           ) : (
-                            <span className="text-primary font-bold text-sm">
+                            <span className="text-primary font-bold text-xs">
                               {initials(member.name ?? "")}
                             </span>
                           )}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <span className="font-medium text-text-main truncate block">
+                          <span className="font-medium text-text-main truncate block text-sm">
                             {member.name ?? "—"}
                           </span>
                           <span className="text-xs text-text-muted block">
-                            {member.member_id ?? "—"}
-                          </span>
-                          <span className="text-xs text-text-muted block mt-0.5">
                             Created {formatCreatedDate(member.created_at)}
                           </span>
                         </div>
@@ -232,19 +229,12 @@ function Dashboard() {
                               params: { memberId: member.id },
                             });
                           }}
-                          className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] text-sm font-semibold bg-primary text-white hover:bg-primary-dark transition-colors"
+                          className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold bg-primary text-white hover:bg-primary-dark transition-colors"
                         >
-                          <Eye size={16} />
+                          <Eye size={14} />
                           View
                         </button>
-                        <Link
-                          to="/id-card-studio"
-                          search={{ memberId: member.id }}
-                          onClick={(e) => e.stopPropagation()}
-                          className="shrink-0 text-primary text-xs font-semibold hover:underline py-2 px-1 min-h-[44px] inline-flex items-center"
-                        >
-                          {member.id_card_created ? "View ID" : "Create ID"}
-                        </Link>
+                       
                       </li>
                     ))}
                   </ul>

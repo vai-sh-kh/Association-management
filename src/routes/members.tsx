@@ -108,6 +108,10 @@ function Members() {
   const [exportConfirm, setExportConfirm] = useState<"csv" | "excel" | null>(
     null,
   );
+  const [createIdMemberId, setCreateIdMemberId] = useState<string | null>(null);
+  const [createIdStep, setCreateIdStep] = useState<
+    "confirm" | "navigate" | null
+  >(null);
   const actionMenuRef = useRef<HTMLDivElement>(null);
 
   const pageSizeOptions = [10, 25, 50, 100];
@@ -251,6 +255,17 @@ function Members() {
   const openDelete = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     setDeleteConfirm(id);
+  };
+
+  const openCreateIdConfirm = (e: React.MouseEvent, memberId: string) => {
+    e.stopPropagation();
+    setCreateIdMemberId(memberId);
+    setCreateIdStep("confirm");
+  };
+
+  const closeCreateIdFlow = () => {
+    setCreateIdMemberId(null);
+    setCreateIdStep(null);
   };
 
   const initials = (name: string) =>
@@ -505,24 +520,24 @@ function Members() {
                       className="flex items-center gap-2 shrink-0"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <Link
-                        to="/id-card-studio"
-                        search={{ memberId: member.id }}
-                        className={
-                          member.id_card_created
-                            ? "inline-flex items-center gap-1 px-2.5 py-2 min-h-[44px] text-sm font-semibold bg-success/10 text-success border border-success/30"
-                            : "inline-flex items-center gap-1 px-2.5 py-2 min-h-[44px] text-sm font-semibold bg-primary text-white hover:bg-primary-dark border border-primary"
-                        }
-                      >
-                        {member.id_card_created ? (
-                          <>
-                            <Check size={14} strokeWidth={2.5} />
-                            ID
-                          </>
-                        ) : (
-                          "Create"
-                        )}
-                      </Link>
+                      {member.id_card_created ? (
+                        <Link
+                          to="/id-card-studio"
+                          search={{ memberId: member.id }}
+                          className="inline-flex items-center gap-1 px-2.5 py-2 min-h-[44px] text-sm font-semibold bg-success/10 text-success border border-success/30"
+                        >
+                          <Check size={14} strokeWidth={2.5} />
+                          ID
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={(e) => openCreateIdConfirm(e, member.id)}
+                          className="inline-flex items-center gap-1 px-2.5 py-2 min-h-[44px] text-sm font-semibold bg-primary text-white hover:bg-primary-dark border border-primary"
+                        >
+                          Create
+                        </button>
+                      )}
                       <div
                         className="relative"
                         ref={
@@ -855,24 +870,24 @@ function Members() {
                       className="py-3 px-2 whitespace-nowrap"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <Link
-                        to="/id-card-studio"
-                        search={{ memberId: member.id }}
-                        className={
-                          member.id_card_created
-                            ? "inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-semibold bg-success/10 text-success border border-success/30"
-                            : "inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-semibold bg-primary text-white hover:bg-primary-dark border border-primary"
-                        }
-                      >
-                        {member.id_card_created ? (
-                          <>
-                            <Check size={16} strokeWidth={2.5} />
-                            Created
-                          </>
-                        ) : (
-                          "Create"
-                        )}
-                      </Link>
+                      {member.id_card_created ? (
+                        <Link
+                          to="/id-card-studio"
+                          search={{ memberId: member.id }}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-semibold bg-success/10 text-success border border-success/30"
+                        >
+                          <Check size={16} strokeWidth={2.5} />
+                          Created
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={(e) => openCreateIdConfirm(e, member.id)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-semibold bg-primary text-white hover:bg-primary-dark border border-primary"
+                        >
+                          Create
+                        </button>
+                      )}
                     </td>
                     <td
                       className="py-3 pr-4 pl-2 whitespace-nowrap text-center"
@@ -1093,6 +1108,77 @@ function Members() {
                 ) : (
                   "Remove"
                 )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {createIdMemberId && createIdStep === "confirm" && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50"
+          onClick={closeCreateIdFlow}
+        >
+          <div
+            className="bg-surface-light shadow-xl max-w-sm w-full p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-text-main font-medium text-base mb-4">
+              Create ID card for this member? You will set it up in the ID Card
+              Studio.
+            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={closeCreateIdFlow}
+                className="btn-secondary flex-1 min-h-[44px] text-base"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => setCreateIdStep("navigate")}
+                className="flex-1 min-h-[44px] bg-primary text-white font-bold text-base hover:bg-primary-dark flex items-center justify-center gap-2"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {createIdMemberId && createIdStep === "navigate" && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50"
+          onClick={closeCreateIdFlow}
+        >
+          <div
+            className="bg-surface-light shadow-xl max-w-sm w-full p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-text-main font-medium text-base mb-4">
+              Go to ID Card Studio to set up the ID card for this member?
+            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={closeCreateIdFlow}
+                className="btn-secondary flex-1 min-h-[44px] text-base"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  navigate({
+                    to: "/id-card-studio",
+                    search: { memberId: createIdMemberId },
+                  });
+                  closeCreateIdFlow();
+                }}
+                className="flex-1 min-h-[44px] bg-primary text-white font-bold text-base hover:bg-primary-dark flex items-center justify-center gap-2"
+              >
+                Go to ID Card Studio
               </button>
             </div>
           </div>
