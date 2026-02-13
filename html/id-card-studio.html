@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch - ID Card Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2D60FF",
+                        "primary-dark": "#1a4ad9",
+                        "secondary": "#A3AED0",
+                        "background-light": "#F4F7FE",
+                        "background-dark": "#101422",
+                        "surface": "#FFFFFF",
+                        "text-main": "#2B3674",
+                        "text-secondary": "#A3AED0",
+                        "success": "#05CD99",
+                    },
+                    fontFamily: {
+                        "display": ["DM Sans", "Inter", "sans-serif"],
+                        "body": ["DM Sans", "Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem", 
+                        "lg": "1.25rem",
+                        "xl": "1.875rem",
+                        "2xl": "2rem",
+                        "3xl": "3rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "soft": "0px 18px 40px rgba(112, 144, 176, 0.12)",
+                        "card": "0px 3px 6px rgba(112, 144, 176, 0.08)",
+                        "id-card": "0px 20px 60px rgba(45, 96, 255, 0.15)"
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: #F4F7FE;
+        }::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #A3AED0;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="bg-background-light text-text-main h-screen flex flex-col overflow-hidden">
+<header class="flex items-center justify-between whitespace-nowrap bg-surface px-8 py-4 shadow-sm z-20">
+<div class="flex items-center gap-4 text-text-main">
+<div class="size-8 text-primary flex items-center justify-center bg-primary/10 rounded-full">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+</div>
+<h2 class="text-text-main text-2xl font-bold leading-tight tracking-tight">Stitch</h2>
+</div>
+<div class="hidden md:flex items-center gap-10">
+<a class="text-secondary hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Dashboard</a>
+<a class="text-primary font-bold text-sm leading-normal flex flex-col items-center gap-1" href="#">
+                Directory
+                <div class="h-1 w-1 bg-primary rounded-full"></div>
+</a>
+<a class="text-secondary hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Maintenance</a>
+<a class="text-secondary hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Settings</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<input class="h-10 pl-10 pr-4 rounded-xl bg-background-light border-none text-sm w-64 focus:ring-2 focus:ring-primary/20 text-text-main placeholder-secondary" placeholder="Search" type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-secondary text-[20px]">search</span>
+</div>
+<button class="relative flex size-10 items-center justify-center rounded-full bg-background-light text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+<div class="h-10 w-10 rounded-full bg-cover bg-center border-2 border-white shadow-sm" data-alt="User profile picture of a man" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBq0e7bPtzNUIW1Bas7PAut3cUTgd9NiLlii61K1UkuqF86J5L3v-vw02l2xh-kr7itblilma35ekfPpsSAE9VfRH0mla6Upg6O49g6Dc1evFKU76f1z7PCJkG3RHxwBS1wgjnNbDjyif2yLs43cwVc6aA1477KjqphvE1lEGjLx1R_2xagjTDTTp0baiU4jT_mjxPTth6sRy6Bgg6FDyIoEETa4TD3J2nYjgzpiFNBeuntKkbM9d72jGxRK54G_2g4eJ6QjfgixXYM');"></div>
+</div>
+</header>
+<main class="flex-1 flex overflow-hidden p-6 gap-6 relative">
+<div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none z-0"></div>
+<div class="flex-1 flex flex-col max-w-7xl mx-auto w-full h-full z-10">
+<div class="flex items-center justify-between mb-6">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-secondary text-sm font-medium">
+<span>Directory</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span>Sarah Jenkins</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span class="text-primary">ID Card Studio</span>
+</div>
+<h1 class="text-3xl font-bold text-text-main tracking-tight">ID Card Studio</h1>
+</div>
+<div class="flex gap-3">
+<button class="px-6 h-11 rounded-xl border border-gray-200 bg-white text-text-main text-sm font-bold hover:bg-gray-50 transition-colors flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">history</span>
+                        View History
+                    </button>
+</div>
+</div>
+<div class="flex flex-col lg:flex-row gap-8 h-full min-h-0">
+<div class="flex-[0.8] flex flex-col gap-6 bg-white rounded-[20px] shadow-soft p-8 overflow-y-auto">
+<div class="flex flex-col gap-1 border-b border-gray-100 pb-4 mb-2">
+<h2 class="text-xl font-bold text-text-main">Credential Details</h2>
+<p class="text-secondary text-sm">Configure access permissions and visual identity.</p>
+</div>
+<div class="grid grid-cols-2 gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold text-secondary uppercase tracking-wider pl-1">Resident Name</label>
+<input class="w-full h-12 px-4 bg-background-light border-transparent rounded-xl text-text-main font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-default" readonly="" type="text" value="Sarah Jenkins"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold text-secondary uppercase tracking-wider pl-1">Unit Number</label>
+<input class="w-full h-12 px-4 bg-background-light border-transparent rounded-xl text-text-main font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-default" readonly="" type="text" value="Unit 402 (Owner)"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold text-secondary uppercase tracking-wider pl-1">Resident Photo</label>
+<div class="relative border-2 border-dashed border-primary/20 bg-background-light rounded-xl p-4 flex items-center gap-5 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer group">
+<div class="h-16 w-16 rounded-full overflow-hidden shrink-0 border-2 border-white shadow-sm ring-2 ring-primary/10">
+<img alt="Sarah Jenkins portrait" class="h-full w-full object-cover" data-alt="Portrait of Sarah Jenkins smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6vaSywSUVN0VFbZ5t2AKcLQ1cV_OiqvEB0vgLE19T306OMvfLViDnSaEiLhRIx8I1V1oGIaXGXmVdYJS88UalQ6vRaveILVW20EOGCLu0eQE7WLphN1VrXqZK2pP6Gx8808DEpJ3ZgijnMjGIGEfFRNMw3QDCsgAOrB-XP0fzU8U5OWOKPZXusIl9UI1GKdMUWAMV_t0ldNC1AMHKv0GfAdh7xFs_txc9G0GxQBwZUUpINbJoutogZ1zyc4gl0wZ7JJsbZzVBe0Tv"/>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="text-sm font-bold text-text-main group-hover:text-primary transition-colors">Replace Photo</span>
+<span class="text-xs text-secondary">JPG, PNG (Max 5MB)</span>
+</div>
+<div class="ml-auto bg-white p-2 rounded-full shadow-sm text-primary">
+<span class="material-symbols-outlined text-[20px]">cloud_upload</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold text-secondary uppercase tracking-wider pl-1">Access Level</label>
+<div class="relative group">
+<select class="w-full h-12 pl-4 pr-10 bg-white border border-gray-200 rounded-xl text-text-main font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none cursor-pointer transition-shadow hover:border-primary/50">
+<option>All Amenities</option>
+<option>Gym Only</option>
+<option>Gate Only</option>
+<option>Clubhouse &amp; Pool</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3.5 text-secondary pointer-events-none group-hover:text-primary transition-colors">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold text-secondary uppercase tracking-wider pl-1">Valid Until</label>
+<div class="relative group">
+<input class="w-full h-12 pl-4 pr-4 bg-white border border-gray-200 rounded-xl text-text-main font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer hover:border-primary/50 transition-colors" type="date" value="2024-12-31"/>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2 flex-1 min-h-[100px]">
+<label class="text-xs font-bold text-secondary uppercase tracking-wider pl-1">Internal Notes</label>
+<textarea class="w-full p-4 bg-white border border-gray-200 rounded-xl text-text-main text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none h-full hover:border-primary/50 transition-colors" placeholder="Add any notes about this credential issuance..."></textarea>
+</div>
+<div class="mt-auto flex gap-4 pt-4 border-t border-gray-100">
+<button class="flex-1 h-12 rounded-xl border border-gray-200 text-text-main font-bold hover:bg-gray-50 hover:text-primary transition-colors text-sm">
+                            Download PDF
+                        </button>
+<button class="flex-[1.5] h-12 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition-all shadow-lg shadow-primary/30 flex items-center justify-center gap-2 text-sm hover:-translate-y-0.5">
+<span class="material-symbols-outlined text-[18px]">send_to_mobile</span>
+                            Issue Mobile Pass
+                        </button>
+</div>
+</div>
+<div class="flex-1 flex flex-col relative">
+<div class="bg-white/60 backdrop-blur-xl rounded-[20px] border border-white/50 shadow-soft h-full flex flex-col items-center justify-center p-12 relative overflow-hidden">
+<div class="absolute top-8 left-8 flex items-center gap-2 z-10">
+<div class="relative flex items-center justify-center size-4">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+</div>
+<span class="text-xs font-bold text-text-main uppercase tracking-widest">Live Preview</span>
+</div>
+<div class="relative w-[320px] h-[500px] bg-white rounded-[24px] shadow-id-card overflow-hidden flex flex-col transform transition-transform hover:scale-[1.02] duration-500 group">
+<div class="h-36 bg-gradient-to-br from-[#2D60FF] via-[#4373FF] to-[#6E95FF] relative p-6 flex flex-col justify-between overflow-hidden">
+<div class="absolute inset-0 opacity-[0.08]" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmYiLz48L3N2Zz4=');"></div>
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+<div class="relative z-10 flex justify-between items-start w-full">
+<div class="flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-[20px]">apartment</span>
+<span class="font-bold text-xs tracking-wider opacity-90">STITCH RESIDENTIAL</span>
+</div>
+<div class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
+<span class="text-[10px] font-bold text-white uppercase tracking-wider">Resident</span>
+</div>
+</div>
+</div>
+<div class="flex-1 flex flex-col items-center relative z-20 px-8 pb-8 -mt-14">
+<div class="relative">
+<div class="h-28 w-28 rounded-full border-[5px] border-white shadow-lg overflow-hidden bg-gray-100">
+<img alt="Sarah Jenkins" class="h-full w-full object-cover" data-alt="Portrait of Sarah Jenkins smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMCfTWu77cvKLNYNcGzs6IbPAVBYUzX3gt0bKXRxBfevIi2CC1Tg8pomzKxWON-v5C2RMqpEtlLOAMRb8AjaSm4jRc5UoQmd8RR1iru490pAZCRB8_C3G8KpH4A9VNo3ou1-s5Zo2yJwb4KKB_P1hNLJeKtsVRtDki_UelbDH88QtnhVhWP86MUo4GVPzLRCGE8h-ICXZaAj_YMa_505mDSx_62GP8yyKDp9DqHlNjANlVqNsHzLaQuvEgb11OWoDaczoEVcBnax-Y"/>
+</div>
+<div class="absolute bottom-2 right-1 bg-success h-5 w-5 rounded-full border-[3px] border-white shadow-sm" title="Active"></div>
+</div>
+<div class="mt-4 text-center">
+<h3 class="text-2xl font-bold text-text-main tracking-tight">Sarah Jenkins</h3>
+<p class="text-secondary font-medium text-sm mt-1">Unit 402 • Owner</p>
+</div>
+<div class="mt-5 px-5 py-2 rounded-full bg-background-light text-primary text-xs font-bold uppercase tracking-wider border border-primary/10">
+                                    All Amenities Access
+                                </div>
+<div class="mt-auto w-full pt-6 border-t border-dashed border-gray-200 flex flex-col items-center gap-3">
+<div class="p-2.5 bg-white rounded-xl shadow-card border border-gray-100">
+<img alt="QR Code" class="h-20 w-20 opacity-90 mix-blend-multiply" data-alt="QR Code for access scanning" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6HA8CUcBOCRJAHfQJOxSdV2gO_s-Op6h2k13anBOTSid0Tc6aE9fO26s4_0qlSYCSYy1_0PLlxgcTqWNu3qGzfNmAljUdMTWmTnQ3zd3o5C1CArXYuMO29UZZU2VVYrxXUR8KMMQj2u8K7KnyadHItpiOEBbOeTDNh-iqDMLRwMBRrYf42THxxhF9exhDvgjg43Fl8krhXoa_tHcemzyt3a519Kwf-vQ28IBSV0uWfUwXmjQbCGa1d-hWro9zl4p3wiUX835wcNnV"/>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-secondary font-medium uppercase tracking-wide">Scan for Entry</p>
+<p class="text-[10px] text-secondary/60 font-medium mt-0.5">Expires Dec 31, 2024</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 text-center max-w-sm">
+<p class="text-sm text-secondary font-medium">Previewing mobile pass layout. This design will adapt automatically for Apple Wallet and Google Pay.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>

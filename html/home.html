@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2D60FF",
+                        "primary-dark": "#1A4AD6",
+                        "background-light": "#F4F7FE",
+                        "background-dark": "#101422",
+                        "surface": "#FFFFFF",
+                        "text-main": "#2B3674",
+                        "text-secondary": "#A3AED0",
+                        "success": "#05CD99",
+                        "success-bg": "rgba(5, 205, 153, 0.1)",
+                        "warning": "#FFB547",
+                        "danger": "#EE5D50",
+                        "danger-bg": "rgba(238, 93, 80, 0.1)",
+                    },
+                    fontFamily: {
+                        "display": ["DM Sans", "sans-serif"],
+                        "sans": ["DM Sans", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem", 
+                        "card": "20px", 
+                        "btn": "30px",
+                        "pill": "9999px"
+                    },
+                    boxShadow: {
+                        "soft": "0px 18px 40px rgba(112, 144, 176, 0.12)",
+                        "card": "0px 3px 20px rgba(112, 144, 176, 0.08)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 1,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E0E5F2;
+            border-radius: 20px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #A3AED0;
+        }.chart-grid-line {
+            border-bottom: 1px dashed #E0E5F2;
+        }
+        .ai-assistant-orb {
+            background: radial-gradient(circle at 30% 30%, #5D8CFF, #2D60FF, #1A4AD6);
+            box-shadow: 0 10px 30px rgba(45, 96, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main antialiased h-screen overflow-hidden flex">
+<aside class="w-[280px] h-full bg-surface flex flex-col justify-between shrink-0 border-r border-gray-100 z-20">
+<div class="p-8 pb-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/30">S</div>
+<h1 class="text-text-main text-2xl font-bold tracking-tight">Stitch</h1>
+</div>
+</div>
+<nav class="flex-1 px-4 flex flex-col gap-2 overflow-y-auto">
+<div class="mb-4">
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl bg-primary text-white font-medium shadow-lg shadow-primary/20 transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Dashboard</span>
+</a>
+</div>
+<div class="space-y-1">
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-text-secondary hover:bg-background-light hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">group</span>
+<span class="font-medium">Residents</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-text-secondary hover:bg-background-light hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">inventory_2</span>
+<span class="font-medium">Maintenance</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-text-secondary hover:bg-background-light hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">badge</span>
+<span class="font-medium">ID Studio</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-text-secondary hover:bg-background-light hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">analytics</span>
+<span class="font-medium">Reports</span>
+</a>
+</div>
+<div class="mt-8">
+<h4 class="px-4 text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">System</h4>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-text-secondary hover:bg-background-light hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-text-secondary hover:bg-background-light hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">help</span>
+<span class="font-medium">Help &amp; Support</span>
+</a>
+</div>
+</nav>
+<div class="p-5">
+<div class="bg-gradient-to-b from-[#1A1F37] to-[#101422] rounded-[20px] p-5 text-white relative overflow-hidden text-center">
+<div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-3 backdrop-blur-sm border border-white/10">
+<span class="material-symbols-outlined text-white text-[20px]">diamond</span>
+</div>
+<h3 class="font-bold text-sm mb-1">Upgrade to Premium!</h3>
+<p class="text-[11px] text-gray-400 mb-4 font-medium leading-relaxed">Upgrade your account and unlock all of the benefits.</p>
+<button class="w-full py-2.5 bg-primary hover:bg-primary-dark rounded-pill text-xs font-bold transition-colors shadow-lg shadow-primary/20">Upgrade premium</button>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light relative">
+<header class="h-20 px-8 flex items-center justify-between shrink-0 bg-background-light">
+<h2 class="text-text-main text-2xl font-bold tracking-tight">Dashboard</h2>
+<div class="flex items-center gap-4">
+<div class="relative bg-surface rounded-pill h-11 flex items-center px-4 w-[300px] shadow-sm border border-transparent focus-within:border-primary/20 transition-colors">
+<span class="material-symbols-outlined text-text-secondary text-[20px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full text-text-main placeholder-text-secondary font-medium ml-2" placeholder="Search anything..." type="text"/>
+<div class="hidden sm:flex items-center gap-1 text-[10px] font-bold text-text-secondary border border-gray-100 rounded px-1.5 py-0.5 bg-gray-50">
+                    ⌘K
+                </div>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 rounded-full bg-surface text-text-secondary hover:text-primary hover:bg-white shadow-sm flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-[20px]">dark_mode</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface text-text-secondary hover:text-primary hover:bg-white shadow-sm flex items-center justify-center transition-all relative">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-danger rounded-full border border-surface"></span>
+</button>
+<div class="w-10 h-10 rounded-full bg-cover bg-center border-2 border-white shadow-sm cursor-pointer ml-1" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAv3bqwqAb3mkFO0dcF7xCTTnBLMoY9uZa_EYXylJMzwD_cTkBSW0cLcwVfO_jIJlhvsPNWrvbXVZeOFcqWCnwT0_-HTeHtijAAtcnhr0TetCQq_pZYTcPHdj_fnbV1gP1kCAONitnOwaw2NUPC6S1hoMWVSfbfQsg_5pFLUq-Q7EMZtUPjzD60BFlnbFxEYrF47y-vWthUe_CAxu9a4ZnXmZRLiM5j-kdtmEpjYoFw0OBJDk_78Bs2wT4_NqSPCN-u2RjRuFy5TUc5')"></div>
+</div>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto px-8 pb-8">
+<div class="flex flex-col sm:flex-row justify-end items-center gap-3 mb-6">
+<button class="bg-surface hover:bg-gray-50 text-text-main px-4 py-2 rounded-xl text-sm font-medium shadow-sm flex items-center gap-2 border border-gray-100/50">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                Jan 1, 2025 - Feb 1, 2025
+            </button>
+<button class="bg-surface hover:bg-gray-50 text-text-main px-4 py-2 rounded-xl text-sm font-medium shadow-sm flex items-center gap-2 border border-gray-100/50">
+                Last 30 days
+                <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+<button class="bg-surface hover:bg-gray-50 text-text-main px-4 py-2 rounded-xl text-sm font-medium shadow-sm flex items-center gap-2 border border-gray-100/50">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+                Add widget
+            </button>
+<button class="bg-primary hover:bg-primary-dark text-white px-5 py-2 rounded-xl text-sm font-bold shadow-lg shadow-primary/25 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                Export
+            </button>
+</div>
+<div class="grid grid-cols-12 gap-6">
+<div class="col-span-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-surface rounded-card p-5 shadow-card hover:translate-y-[-2px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<span class="text-text-main font-bold text-sm">Total Residents</span>
+<span class="material-symbols-outlined text-primary text-[20px]">visibility</span>
+</div>
+<div class="flex items-end gap-3 mb-2">
+<h3 class="text-2xl font-bold text-text-main">16,431</h3>
+<span class="bg-success-bg text-success px-2 py-0.5 rounded-md text-xs font-bold flex items-center mb-1">
+<span class="material-symbols-outlined text-[12px] mr-0.5">trending_up</span> 15.5%
+                        </span>
+</div>
+<p class="text-xs text-text-secondary">vs. 14,653 last period</p>
+</div>
+<div class="bg-surface rounded-card p-5 shadow-card hover:translate-y-[-2px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<span class="text-text-main font-bold text-sm">Visitors</span>
+<span class="material-symbols-outlined text-primary text-[20px]">groups</span>
+</div>
+<div class="flex items-end gap-3 mb-2">
+<h3 class="text-2xl font-bold text-text-main">6,225</h3>
+<span class="bg-success-bg text-success px-2 py-0.5 rounded-md text-xs font-bold flex items-center mb-1">
+<span class="material-symbols-outlined text-[12px] mr-0.5">trending_up</span> 8.4%
+                        </span>
+</div>
+<p class="text-xs text-text-secondary">vs. 5,732 last period</p>
+</div>
+<div class="bg-surface rounded-card p-5 shadow-card hover:translate-y-[-2px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<span class="text-text-main font-bold text-sm">Tickets</span>
+<span class="material-symbols-outlined text-primary text-[20px]">ads_click</span>
+</div>
+<div class="flex items-end gap-3 mb-2">
+<h3 class="text-2xl font-bold text-text-main">2,832</h3>
+<span class="bg-danger-bg text-danger px-2 py-0.5 rounded-md text-xs font-bold flex items-center mb-1">
+<span class="material-symbols-outlined text-[12px] mr-0.5">trending_down</span> 10.5%
+                        </span>
+</div>
+<p class="text-xs text-text-secondary">vs. 3,294 last period</p>
+</div>
+<div class="bg-surface rounded-card p-5 shadow-card hover:translate-y-[-2px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<span class="text-text-main font-bold text-sm">Amenities</span>
+<span class="material-symbols-outlined text-primary text-[20px]">shopping_bag</span>
+</div>
+<div class="flex items-end gap-3 mb-2">
+<h3 class="text-2xl font-bold text-text-main">1,224</h3>
+<span class="bg-success-bg text-success px-2 py-0.5 rounded-md text-xs font-bold flex items-center mb-1">
+<span class="material-symbols-outlined text-[12px] mr-0.5">trending_up</span> 4.4%
+                        </span>
+</div>
+<p class="text-xs text-text-secondary">vs. 1,186 last period</p>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-6">
+<div class="bg-surface rounded-card p-6 shadow-card">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="text-text-main font-bold text-base mb-1">Total Expenses</h3>
+</div>
+</div>
+<div class="flex gap-8 items-start mb-6">
+<div>
+<h2 class="text-3xl font-bold text-text-main mb-1">$446.7K</h2>
+<span class="bg-success-bg text-success px-2 py-1 rounded-md text-xs font-bold inline-flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1">trending_up</span> 24.4%
+                            </span>
+<span class="text-text-secondary text-xs ml-1">vs. last period</span>
+</div>
+<div class="flex-1 h-[140px] relative mt-2">
+<div class="absolute left-0 top-0 h-full flex flex-col justify-between text-[10px] text-text-secondary font-medium w-6 text-right pr-2">
+<span>15K</span>
+<span>10K</span>
+<span>5K</span>
+<span>0</span>
+</div>
+<div class="ml-8 h-full relative">
+<div class="absolute w-full top-0 border-t border-dashed border-gray-100"></div>
+<div class="absolute w-full top-1/3 border-t border-dashed border-gray-100"></div>
+<div class="absolute w-full top-2/3 border-t border-dashed border-gray-100"></div>
+<div class="absolute w-full bottom-0 border-t border-gray-200"></div>
+<svg class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+<defs>
+<linearGradient id="gradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#2D60FF" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#2D60FF" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<path d="M0,80 L10,80 L20,75 L30,40 L40,50 L50,20 L60,30 L70,30 L80,10 L90,20 L100,10" fill="none" stroke="#2D60FF" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<path d="M0,80 L10,80 L20,75 L30,40 L40,50 L50,20 L60,30 L70,30 L80,10 L90,20 L100,10 V100 H0 Z" fill="url(#gradient)" stroke="none"></path>
+<path d="M30,40 L40,50 L50,20" fill="none" stroke="#2D60FF" stroke-dasharray="3,3" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<circle cx="50" cy="20" fill="#2D60FF" r="3" stroke="white" stroke-width="2"></circle>
+</svg>
+<div class="absolute left-1/2 top-[10%] -translate-x-1/2 bg-white shadow-xl rounded-xl p-3 border border-gray-100 z-10 w-40">
+<p class="text-[10px] text-text-secondary mb-1">Jan 18, 2025</p>
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-0.5 bg-primary rounded-full"></div>
+<span class="text-xs font-bold text-text-main">$12,324</span>
+</div>
+<span class="text-[9px] text-text-secondary">this month</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-0.5 bg-gray-300 rounded-full"></div>
+<span class="text-xs font-bold text-text-secondary line-through">$5,563</span>
+</div>
+<span class="text-[9px] text-text-secondary">last month</span>
+</div>
+</div>
+</div>
+<div class="ml-8 mt-2 flex justify-between text-[10px] text-text-secondary font-medium">
+<span>1 Jan</span>
+<span>8 Jan</span>
+<span>15 Jan</span>
+<span>22 Jan</span>
+<span>29 Jan</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-6 pt-6 border-t border-gray-100">
+<div>
+<p class="text-text-main font-bold text-sm mb-3">Residents</p>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-1 h-3 bg-primary rounded-full"></div>
+<span class="text-xl font-bold text-text-main">2,884</span>
+</div>
+<div class="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-full rounded-full"></div>
+</div>
+<p class="text-[10px] text-text-secondary mt-1">Owners</p>
+</div>
+<div>
+<div class="flex justify-between items-center mb-3 h-5"></div>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-1 h-3 bg-success rounded-full"></div>
+<span class="text-xl font-bold text-text-main">1,432</span>
+</div>
+<div class="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-success w-[60%] rounded-full"></div>
+</div>
+<p class="text-[10px] text-text-secondary mt-1">Tenants</p>
+</div>
+<div>
+<div class="flex justify-between items-center mb-3 h-5"></div>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-1 h-3 bg-warning rounded-full"></div>
+<span class="text-xl font-bold text-text-main">562</span>
+</div>
+<div class="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-warning w-[30%] rounded-full"></div>
+</div>
+<p class="text-[10px] text-text-secondary mt-1">Pending</p>
+</div>
+</div>
+</div>
+<div class="bg-surface rounded-card p-6 shadow-card">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-text-main font-bold text-base">Popular Amenities</h3>
+<button class="text-text-secondary hover:text-primary">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-text-secondary text-[11px] uppercase tracking-wider font-semibold border-b border-gray-100">
+<th class="pb-3 pl-2 w-16">ID</th>
+<th class="pb-3">Name</th>
+<th class="pb-3 text-right">Booked</th>
+<th class="pb-3 text-right">Revenue</th>
+<th class="pb-3 text-right pr-2">Rating</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<tr class="group hover:bg-gray-50/80 transition-colors">
+<td class="py-4 pl-2 text-text-secondary text-xs">#83009</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">
+<span class="material-symbols-outlined text-[16px]">pool</span>
+</div>
+<span class="font-bold text-text-main text-sm">Community Pool</span>
+</div>
+</td>
+<td class="py-4 text-right text-text-secondary text-xs font-medium">2,310 times</td>
+<td class="py-4 text-right text-success font-bold text-xs">$124,839</td>
+<td class="py-4 pr-2 text-right">
+<div class="flex items-center justify-end gap-1 text-xs font-bold text-text-main">
+<span class="material-symbols-outlined text-warning text-[14px]">star</span> (5.0)
+                                        </div>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50/80 transition-colors">
+<td class="py-4 pl-2 text-text-secondary text-xs">#83001</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">
+<span class="material-symbols-outlined text-[16px]">fitness_center</span>
+</div>
+<span class="font-bold text-text-main text-sm">Gym Center</span>
+</div>
+</td>
+<td class="py-4 text-right text-text-secondary text-xs font-medium">1,230 times</td>
+<td class="py-4 text-right text-danger font-bold text-xs">$92,662</td>
+<td class="py-4 pr-2 text-right">
+<div class="flex items-center justify-end gap-1 text-xs font-bold text-text-main">
+<span class="material-symbols-outlined text-warning text-[14px]">star</span> (4.8)
+                                        </div>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50/80 transition-colors">
+<td class="py-4 pl-2 text-text-secondary text-xs">#83004</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">
+<span class="material-symbols-outlined text-[16px]">local_parking</span>
+</div>
+<span class="font-bold text-text-main text-sm">Guest Parking</span>
+</div>
+</td>
+<td class="py-4 text-right text-text-secondary text-xs font-medium">812 times</td>
+<td class="py-4 text-right text-danger font-bold text-xs">$74,048</td>
+<td class="py-4 pr-2 text-right">
+<div class="flex items-center justify-end gap-1 text-xs font-bold text-text-main">
+<span class="material-symbols-outlined text-warning text-[14px]">star</span> (4.7)
+                                        </div>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50/80 transition-colors">
+<td class="py-4 pl-2 text-text-secondary text-xs">#83002</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">
+<span class="material-symbols-outlined text-[16px]">sports_tennis</span>
+</div>
+<span class="font-bold text-text-main text-sm">Tennis Court</span>
+</div>
+</td>
+<td class="py-4 text-right text-text-secondary text-xs font-medium">645 times</td>
+<td class="py-4 text-right text-success font-bold text-xs">$62,820</td>
+<td class="py-4 pr-2 text-right">
+<div class="flex items-center justify-end gap-1 text-xs font-bold text-text-main">
+<span class="material-symbols-outlined text-warning text-[14px]">star</span> (4.5)
+                                        </div>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50/80 transition-colors">
+<td class="py-4 pl-2 text-text-secondary text-xs">#83002</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">
+<span class="material-symbols-outlined text-[16px]">celebration</span>
+</div>
+<span class="font-bold text-text-main text-sm">Party Hall</span>
+</div>
+</td>
+<td class="py-4 text-right text-text-secondary text-xs font-medium">572 times</td>
+<td class="py-4 text-right text-success font-bold text-xs">$48,724</td>
+<td class="py-4 pr-2 text-right">
+<div class="flex items-center justify-end gap-1 text-xs font-bold text-text-main">
+<span class="material-symbols-outlined text-warning text-[14px]">star</span> (4.5)
+                                        </div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+<div class="bg-surface rounded-card p-6 shadow-card">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-text-main font-bold text-base">Most Day Active</h3>
+<button class="text-text-secondary hover:text-primary">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<div class="h-[200px] flex items-end justify-between gap-2">
+<div class="flex flex-col items-center gap-2 w-full group">
+<div class="w-full bg-gray-100 rounded-t-lg h-24 relative group-hover:bg-gray-200 transition-colors"></div>
+<span class="text-[10px] text-text-secondary">Sun</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-full group">
+<div class="w-full bg-gray-100 rounded-t-lg h-14 relative group-hover:bg-gray-200 transition-colors"></div>
+<span class="text-[10px] text-text-secondary">Mon</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-full group relative">
+<div class="absolute -top-10 bg-surface shadow-md rounded-lg px-2 py-1 text-xs font-bold text-text-main mb-2 whitespace-nowrap z-10 border border-gray-100">8,162</div>
+<div class="w-full bg-primary rounded-t-lg h-40 relative shadow-lg shadow-primary/30"></div>
+<span class="text-[10px] text-primary font-bold">Tue</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-full group">
+<div class="w-full bg-gray-100 rounded-t-lg h-12 relative group-hover:bg-gray-200 transition-colors"></div>
+<span class="text-[10px] text-text-secondary">Wed</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-full group">
+<div class="w-full bg-gray-100 rounded-t-lg h-10 relative group-hover:bg-gray-200 transition-colors"></div>
+<span class="text-[10px] text-text-secondary">Thu</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-full group">
+<div class="w-full bg-gray-100 rounded-t-lg h-20 relative group-hover:bg-gray-200 transition-colors"></div>
+<span class="text-[10px] text-text-secondary">Fri</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-full group">
+<div class="w-full bg-gray-100 rounded-t-lg h-24 relative group-hover:bg-gray-200 transition-colors"></div>
+<span class="text-[10px] text-text-secondary">Sat</span>
+</div>
+</div>
+</div>
+<div class="bg-surface rounded-card p-6 shadow-card">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-text-main font-bold text-base">Renewal Rate</h3>
+<button class="text-text-secondary hover:text-primary">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<div class="relative h-48 flex flex-col items-center justify-center">
+<div class="w-48 h-24 overflow-hidden relative">
+<div class="w-48 h-48 rounded-full border-[12px] border-gray-100 border-dashed box-border absolute top-0 left-0"></div>
+<div class="w-48 h-48 rounded-full border-[12px] border-success border-dashed box-border absolute top-0 left-0" style="clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); transform: rotate(45deg);"></div>
+</div>
+<div class="absolute top-[35%] flex flex-col items-center">
+<h2 class="text-4xl font-bold text-text-main mb-1">68%</h2>
+<p class="text-[10px] text-text-secondary font-medium">On track for 80% target</p>
+</div>
+<button class="mt-8 px-4 py-2 border border-gray-200 rounded-pill text-xs font-bold text-text-main hover:bg-gray-50 transition-colors">
+                            Show details
+                        </button>
+</div>
+</div>
+<div class="bg-surface rounded-card p-6 shadow-card h-full flex flex-col justify-between min-h-[300px]">
+<div class="flex justify-between items-center">
+<h3 class="text-text-main font-bold text-base">AI Assistant</h3>
+<button class="text-text-secondary hover:text-primary">
+<span class="material-symbols-outlined text-[16px]">open_in_full</span>
+</button>
+</div>
+<div class="flex-1 flex items-center justify-center relative my-4">
+<div class="w-20 h-20 rounded-full ai-assistant-orb relative z-10"></div>
+<div class="absolute w-32 h-32 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+</div>
+<div class="relative">
+<div class="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary">
+<span class="material-symbols-outlined text-[18px]">alternate_email</span>
+</div>
+<input class="w-full bg-gray-50 border-none rounded-pill py-3 pl-9 pr-12 text-sm text-text-main placeholder-text-secondary focus:ring-1 focus:ring-primary/50" placeholder="Ask me anything.." type="text"/>
+<div class="absolute right-1 top-1 flex items-center gap-1">
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-md shadow-primary/20 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>

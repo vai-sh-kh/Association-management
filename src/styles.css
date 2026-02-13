@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@theme {
+  /* Government / Professional Office - formal palette */
+  --color-primary: #1e3a5f;
+  --color-primary-dark: #0f2744;
+  --color-primary-light: #2c5282;
+
+  /* Background - off-white, easy on eyes (60+) */
+  --color-background-light: #f7f7f5;
+  --color-background-dark: #1a1a1a;
+
+  /* Surface */
+  --color-surface-light: #ffffff;
+  --color-surface-gray: #e8e8e6;
+
+  /* Text - high contrast for readability */
+  --color-text-main: #1a1a1a;
+  --color-text-secondary: #333333;
+  --color-text-muted: #555555;
+  --color-text-light: #666666;
+
+  /* Status */
+  --color-success: #1d5c1d;
+  --color-warning: #8a5a00;
+  --color-danger: #8b0000;
+  --color-info: #1e3a5f;
+
+  /* Accent */
+  --color-accent-purple: #4a5568;
+  --color-accent-purple-dark: #2d3748;
+
+  /* Typography - professional, readable for 60+ */
+  --font-display: Georgia, "Times New Roman", Times, serif;
+  --font-sans: Arial, Helvetica, sans-serif;
+
+  /* Zero rounded - full straight (government / formal) */
+  --radius-sm: 0;
+  --radius-DEFAULT: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+
+  /* Borders - clear and straight */
+  --shadow-soft: 0 1px 0 rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-DEFAULT: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+@layer base {
+  html {
+    font-size: 16px; /* 60+ friendly base size */
+  }
+
+  body {
+    @apply bg-background-light text-text-main antialiased;
+    font-family: var(--font-sans);
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    @apply font-bold text-text-main;
+  }
+
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+
+  input,
+  textarea,
+  select {
+    @apply bg-surface-light px-4 py-3 text-text-main placeholder-text-muted border border-[#333];
+    border-radius: 0;
+    font-size: 1rem;
+    min-height: 44px; /* touch-friendly, 60+ */
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply outline-none border-primary;
+    box-shadow: 0 0 0 2px rgba(30, 58, 95, 0.2);
+  }
+
+  button {
+    font-family: var(--font-sans);
+    @apply font-semibold;
+    border-radius: 0;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Straight-edged cards - no rounded corners, no border/shadow */
+  .card {
+    @apply bg-surface-light p-6;
+    border-radius: 0;
+  }
+
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-dark text-white px-6 py-3 font-semibold;
+    border-radius: 0;
+  }
+
+  .btn-secondary {
+    @apply bg-surface-light text-text-main px-6 py-3 font-semibold;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-surface-gray;
+  }
+}
