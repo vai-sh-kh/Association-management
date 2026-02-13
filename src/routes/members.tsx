@@ -392,7 +392,7 @@ function Members() {
                     setFilterStatus("");
                     setFilterIdCard("");
                   }}
-                  className="h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray/50"
+                  className="h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray"
                 >
                   Clear
                 </button>
@@ -430,7 +430,7 @@ function Members() {
           <button
             type="button"
             onClick={handleExportCSV}
-            className="hidden md:flex h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray/50 items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="hidden md:flex h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
             title="Export as CSV"
           >
             <FileDown size={18} />
@@ -439,7 +439,7 @@ function Members() {
           <button
             type="button"
             onClick={handleExportExcel}
-            className="hidden md:flex h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray/50 items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="hidden md:flex h-11 px-3 text-sm font-medium text-text-main bg-surface-light border border-[#333] rounded hover:bg-surface-gray items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
             title="Export as Excel"
           >
             <FileSpreadsheet size={18} />
@@ -450,7 +450,13 @@ function Members() {
 
       <section className="card flex-1 overflow-hidden p-0! w-full flex flex-col min-h-0">
         {/* Mobile card list - below md */}
-        <div className="md:hidden overflow-auto w-full flex-1 min-h-0 max-h-[70vh]">
+        <div className="md:hidden flex flex-col w-full flex-1 min-h-0 overflow-hidden">
+          <div className="shrink-0 py-3 px-4 bg-surface-gray border-b border-[#333]">
+            <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">
+              Members
+            </h3>
+          </div>
+          <div className="flex-1 min-h-0 overflow-auto max-h-[70vh]">
           {isLoading && (
             <div className="flex flex-col items-center justify-center py-16 px-4">
               <Loader2
@@ -508,7 +514,7 @@ function Members() {
                         });
                       }
                     }}
-                    className="flex items-center gap-3 p-4 min-h-[72px] active:bg-surface-gray/50 transition-colors"
+                    className="flex items-center gap-3 p-4 min-h-[72px] active:bg-surface-gray transition-colors"
                   >
                     <div className="flex-shrink-0 h-12 w-12">
                       {member.avatar_url ? (
@@ -587,7 +593,7 @@ function Members() {
                           <div className="absolute right-0 top-full mt-1 z-20 min-w-[180px] py-1 bg-surface-light border border-[#333] shadow-lg rounded">
                             <button
                               type="button"
-                              className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray/50 flex items-center gap-2"
+                              className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setActionMenuOpen(null);
@@ -602,7 +608,7 @@ function Members() {
                             </button>
                             <button
                               type="button"
-                              className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray/50 flex items-center gap-2"
+                              className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setActionMenuOpen(null);
@@ -615,7 +621,7 @@ function Members() {
                             <Link
                               to="/id-card-studio"
                               search={{ memberId: member.id }}
-                              className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray/50 flex items-center gap-2"
+                              className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setActionMenuOpen(null);
@@ -647,18 +653,19 @@ function Members() {
               ))}
             </ul>
           )}
+          </div>
         </div>
 
         {/* Desktop table - md and up */}
         <div className="hidden md:block overflow-auto w-full scrollbar-hide max-h-[70vh]">
           <table className="w-full min-w-[900px] border-collapse">
-            <thead className="sticky top-0 z-10 bg-surface-gray/50">
-              <tr className="text-left border-b border-[#333]">
-                <th className="py-4 pl-4 pr-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray/50 w-12">
+            <thead className="sticky top-0 z-10 bg-surface-gray border-b-2 border-[#333]">
+              <tr className="text-left">
+                <th className="py-4 pl-4 pr-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray w-12">
                   No
                 </th>
                 <th
-                  className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray/50 cursor-pointer hover:bg-surface-gray/80 select-none"
+                  className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray cursor-pointer hover:bg-surface-gray/80 select-none"
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleSort("name");
@@ -677,14 +684,14 @@ function Members() {
                     )}
                   </span>
                 </th>
-                <th className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray/50">
+                <th className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray">
                   Unit
                 </th>
-                <th className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray/50">
+                <th className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray">
                   Type
                 </th>
                 <th
-                  className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray/50 cursor-pointer hover:bg-surface-gray/80 select-none"
+                  className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray cursor-pointer hover:bg-surface-gray/80 select-none"
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleSort("status");
@@ -703,11 +710,11 @@ function Members() {
                     )}
                   </span>
                 </th>
-                <th className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray/50">
+                <th className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray">
                   Mobile
                 </th>
                 <th
-                  className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray/50 cursor-pointer hover:bg-surface-gray/80 select-none"
+                  className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray cursor-pointer hover:bg-surface-gray/80 select-none"
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleSort("created_at");
@@ -727,7 +734,7 @@ function Members() {
                   </span>
                 </th>
                 <th
-                  className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray/50 cursor-pointer hover:bg-surface-gray/80 select-none"
+                  className="py-4 px-2 text-xs font-bold text-text-muted uppercase tracking-wider bg-surface-gray cursor-pointer hover:bg-surface-gray/80 select-none"
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleSort("id_card_created");
@@ -746,7 +753,7 @@ function Members() {
                     )}
                   </span>
                 </th>
-                <th className="py-4 pr-4 pl-2 bg-surface-gray/50 w-28 text-xs font-bold text-text-muted uppercase tracking-wider text-center">
+                <th className="py-4 pr-4 pl-2 bg-surface-gray w-28 text-xs font-bold text-text-muted uppercase tracking-wider text-center">
                   Actions
                 </th>
               </tr>
@@ -805,7 +812,7 @@ function Members() {
                 paginatedMembers.map((member, index) => (
                   <tr
                     key={member.id}
-                    className="group hover:bg-surface-gray/50 transition-colors cursor-pointer"
+                    className="group hover:bg-surface-gray transition-colors cursor-pointer"
                     onClick={() =>
                       navigate({
                         to: "/members/$memberId",
@@ -928,7 +935,7 @@ function Members() {
                           <div className="absolute right-0 top-full mt-1 z-20 min-w-[180px] py-1 bg-surface-light border border-[#333] shadow-lg rounded">
                             <button
                               type="button"
-                              className="w-full px-4 py-2.5 text-left text-sm font-medium text-text-main hover:bg-surface-gray/50 flex items-center gap-2"
+                              className="w-full px-4 py-2.5 text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setActionMenuOpen(null);
@@ -943,7 +950,7 @@ function Members() {
                             </button>
                             <button
                               type="button"
-                              className="w-full px-4 py-2.5 text-left text-sm font-medium text-text-main hover:bg-surface-gray/50 flex items-center gap-2"
+                              className="w-full px-4 py-2.5 text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setActionMenuOpen(null);
@@ -956,7 +963,7 @@ function Members() {
                             <Link
                               to="/id-card-studio"
                               search={{ memberId: member.id }}
-                              className="w-full px-4 py-2.5 text-left text-sm font-medium text-text-main hover:bg-surface-gray/50 flex items-center gap-2"
+                              className="w-full px-4 py-2.5 text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setActionMenuOpen(null);

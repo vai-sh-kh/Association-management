@@ -99,8 +99,8 @@ function Dashboard() {
           </p>
         </div>
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* Stats Row: 2 per row on mobile, 4 on large */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
           {statsLoading
             ? Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="card animate-pulse">
@@ -234,7 +234,6 @@ function Dashboard() {
                           <Eye size={14} />
                           View
                         </button>
-                       
                       </li>
                     ))}
                   </ul>
