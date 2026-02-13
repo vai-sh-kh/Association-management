@@ -20,39 +20,6 @@ export const Route = createFileRoute("/members/$memberId")({
   component: MemberProfilePage,
 });
 
-function formatAccessTime(ts: string): string {
-  const d = new Date(ts);
-  const now = new Date();
-  const diffMs = now.getTime() - d.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-  if (diffMins < 60) return `Today, ${diffMins} mins ago`;
-  if (diffHours < 24)
-    return `Yesterday, ${d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
-  if (diffDays < 7)
-    return d.toLocaleDateString([], {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  return d.toLocaleDateString();
-}
-
-function formatDate(value: string | null): string {
-  if (!value) return "—";
-  try {
-    return new Date(value).toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  } catch {
-    return value;
-  }
-}
-
 function MemberProfilePage() {
   const { memberId } = Route.useParams();
   const navigate = useNavigate();
@@ -221,27 +188,6 @@ function MemberProfilePage() {
     .join("")
     .slice(0, 2)
     .toUpperCase();
-
-  const hasDetail = (v: string | null | undefined) => v != null && v !== "";
-  const hasAnyDetail =
-    hasDetail(member.member_id) ||
-    hasDetail(member.building) ||
-    hasDetail(member.unit) ||
-    !!member.member_type ||
-    !!member.status ||
-    hasDetail(member.date_of_birth) ||
-    hasDetail(member.occupation) ||
-    hasDetail(member.move_in_date) ||
-    hasDetail(member.move_out_date) ||
-    hasDetail(member.last_access) ||
-    hasDetail(member.residential_address) ||
-    hasDetail(member.mailing_address) ||
-    hasDetail(member.emergency_contact_phone) ||
-    hasDetail(member.emergency_contact_email) ||
-    hasDetail(member.notes) ||
-    hasDetail(member.created_at) ||
-    hasDetail(member.updated_at) ||
-    hasDetail(member.last_access_location);
 
   return (
     <Layout>
