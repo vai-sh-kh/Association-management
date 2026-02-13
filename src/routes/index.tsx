@@ -168,7 +168,7 @@ function Dashboard() {
                   </p>
                 ) : (
                   <ul className="space-y-0 divide-y divide-surface-gray/80">
-                    {recentMembers.map((member) => (
+                    {recentMembers.map((member, index) => (
                       <li
                         key={member.id}
                         role="button"
@@ -190,6 +190,9 @@ function Dashboard() {
                         }}
                         className="flex items-center gap-3 py-2.5 first:pt-0 cursor-pointer hover:bg-surface-gray/50 transition-colors"
                       >
+                        <span className="shrink-0 w-6 text-xs font-bold text-text-muted tabular-nums">
+                          {index + 1}
+                        </span>
                         <div className="shrink-0 h-12 w-12 overflow-hidden bg-surface-gray flex items-center justify-center">
                           {member.avatar_url ? (
                             <img

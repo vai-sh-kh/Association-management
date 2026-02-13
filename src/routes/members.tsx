@@ -457,202 +457,208 @@ function Members() {
             </h3>
           </div>
           <div className="flex-1 min-h-0 overflow-auto max-h-[70vh]">
-          {isLoading && (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <Loader2
-                size={40}
-                className="animate-spin text-text-muted shrink-0"
-                aria-hidden
-              />
-              <span className="text-sm font-medium text-text-secondary mt-3">
-                Loading…
-              </span>
-            </div>
-          )}
-          {isError && !isLoading && (
-            <div className="py-12 text-center text-danger font-medium px-4">
-              {(error as Error)?.message ?? "Failed to load members"}
-            </div>
-          )}
-          {!isLoading && !isError && filteredMembers.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-              <UsersRound
-                size={64}
-                className="text-text-muted/60 mb-4"
-                strokeWidth={1.25}
-                aria-hidden
-              />
-              <h3 className="text-xl font-bold text-text-main mb-2">
-                No residents found
-              </h3>
-              <p className="text-sm text-text-secondary max-w-sm">
-                {search || filterStatus
-                  ? "Try adjusting your search or filters to see more results."
-                  : "Add your first member to get started."}
-              </p>
-            </div>
-          )}
-          {!isLoading && !isError && paginatedMembers.length > 0 && (
-            <ul className="divide-y divide-[#333]">
-              {paginatedMembers.map((member) => (
-                <li key={member.id} className="bg-surface-light">
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    onClick={() =>
-                      navigate({
-                        to: "/members/$memberId",
-                        params: { memberId: member.id },
-                      })
-                    }
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        navigate({
-                          to: "/members/$memberId",
-                          params: { memberId: member.id },
-                        });
-                      }
-                    }}
-                    className="flex items-center gap-3 p-4 min-h-[72px] active:bg-surface-gray transition-colors"
-                  >
-                    <div className="flex-shrink-0 h-12 w-12">
-                      {member.avatar_url ? (
-                        <img
-                          alt=""
-                          className="h-12 w-12 object-cover"
-                          src={member.avatar_url}
-                        />
-                      ) : (
-                        <div className="h-12 w-12 bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
-                          {initials(member.name)}
-                        </div>
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="font-bold text-text-main truncate">
-                        {member.name}
-                      </div>
-                      <div className="text-xs text-text-secondary truncate">
-                        Unit {member.unit} • {member.member_type}
-                      </div>
-                      <span
-                        className={`inline-flex items-center mt-1 text-xs font-bold px-2 py-0.5 ${getStatusStyles(member.status)}`}
-                      >
-                        <span
-                          className={`w-1.5 h-1.5 mr-1.5 ${getStatusDotColor(member.status)}`}
-                        />
-                        {member.status}
-                      </span>
-                    </div>
-                    <div
-                      className="flex items-center gap-2 shrink-0"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {member.id_card_created ? (
-                        <Link
-                          to="/id-card-studio"
-                          search={{ memberId: member.id }}
-                          className="inline-flex items-center gap-1 px-2.5 py-2 min-h-[44px] text-sm font-semibold bg-success/10 text-success border border-success/30"
-                        >
-                          <Check size={14} strokeWidth={2.5} />
-                          ID
-                        </Link>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={(e) => openCreateIdConfirm(e, member.id)}
-                          className="inline-flex items-center gap-1 px-2.5 py-2 min-h-[44px] text-sm font-semibold bg-primary text-white hover:bg-primary-dark border border-primary"
-                        >
-                          Create
-                        </button>
-                      )}
+            {isLoading && (
+              <div className="flex flex-col items-center justify-center py-16 px-4">
+                <Loader2
+                  size={40}
+                  className="animate-spin text-text-muted shrink-0"
+                  aria-hidden
+                />
+                <span className="text-sm font-medium text-text-secondary mt-3">
+                  Loading…
+                </span>
+              </div>
+            )}
+            {isError && !isLoading && (
+              <div className="py-12 text-center text-danger font-medium px-4">
+                {(error as Error)?.message ?? "Failed to load members"}
+              </div>
+            )}
+            {!isLoading && !isError && filteredMembers.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+                <UsersRound
+                  size={64}
+                  className="text-text-muted/60 mb-4"
+                  strokeWidth={1.25}
+                  aria-hidden
+                />
+                <h3 className="text-xl font-bold text-text-main mb-2">
+                  No residents found
+                </h3>
+                <p className="text-sm text-text-secondary max-w-sm">
+                  {search || filterStatus
+                    ? "Try adjusting your search or filters to see more results."
+                    : "Add your first member to get started."}
+                </p>
+              </div>
+            )}
+            {!isLoading && !isError && paginatedMembers.length > 0 && (
+              <ul className="divide-y divide-[#333]">
+                {paginatedMembers.map((member, index) => {
+                  const rowNo = (currentPage - 1) * pageSize + index + 1;
+                  return (
+                    <li key={member.id} className="bg-surface-light">
                       <div
-                        className="relative"
-                        ref={
-                          actionMenuOpen === member.id
-                            ? actionMenuRef
-                            : undefined
+                        role="button"
+                        tabIndex={0}
+                        onClick={() =>
+                          navigate({
+                            to: "/members/$memberId",
+                            params: { memberId: member.id },
+                          })
                         }
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            navigate({
+                              to: "/members/$memberId",
+                              params: { memberId: member.id },
+                            });
+                          }
+                        }}
+                        className="flex items-center gap-3 p-4 min-h-[72px] active:bg-surface-gray transition-colors"
                       >
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActionMenuOpen((id) =>
-                              id === member.id ? null : member.id,
-                            );
-                          }}
-                          className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-text-secondary hover:text-primary hover:bg-primary/10 rounded"
-                          aria-label="Actions"
-                          aria-expanded={actionMenuOpen === member.id}
+                        <span className="shrink-0 w-8 text-xs font-bold text-text-muted tabular-nums">
+                          {rowNo}
+                        </span>
+                        <div className="shrink-0 h-12 w-12">
+                          {member.avatar_url ? (
+                            <img
+                              alt=""
+                              className="h-12 w-12 object-cover"
+                              src={member.avatar_url}
+                            />
+                          ) : (
+                            <div className="h-12 w-12 bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+                              {initials(member.name)}
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-bold text-text-main truncate">
+                            {member.name}
+                          </div>
+                          <div className="text-xs text-text-secondary truncate">
+                            Unit {member.unit} • {member.member_type}
+                          </div>
+                          <span
+                            className={`inline-flex items-center mt-1 text-xs font-bold px-2 py-0.5 ${getStatusStyles(member.status)}`}
+                          >
+                            <span
+                              className={`w-1.5 h-1.5 mr-1.5 ${getStatusDotColor(member.status)}`}
+                            />
+                            {member.status}
+                          </span>
+                        </div>
+                        <div
+                          className="flex items-center gap-2 shrink-0"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          <MoreVertical size={20} />
-                        </button>
-                        {actionMenuOpen === member.id && (
-                          <div className="absolute right-0 top-full mt-1 z-20 min-w-[180px] py-1 bg-surface-light border border-[#333] shadow-lg rounded">
-                            <button
-                              type="button"
-                              className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setActionMenuOpen(null);
-                                navigate({
-                                  to: "/members/$memberId",
-                                  params: { memberId: member.id },
-                                });
-                              }}
-                            >
-                              <Eye size={16} />
-                              View
-                            </button>
-                            <button
-                              type="button"
-                              className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setActionMenuOpen(null);
-                                openEdit(e, member);
-                              }}
-                            >
-                              <Pencil size={16} />
-                              Edit
-                            </button>
+                          {member.id_card_created ? (
                             <Link
                               to="/id-card-studio"
                               search={{ memberId: member.id }}
-                              className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setActionMenuOpen(null);
-                              }}
+                              className="inline-flex items-center gap-1 px-2.5 py-2 min-h-[44px] text-sm font-semibold bg-success/10 text-success border border-success/30"
                             >
-                              <IdCard size={16} />
-                              {member.id_card_created
-                                ? "View ID Card"
-                                : "Create ID Card"}
+                              <Check size={14} strokeWidth={2.5} />
+                              ID
                             </Link>
+                          ) : (
                             <button
                               type="button"
-                              className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-danger hover:bg-danger/10 flex items-center gap-2"
+                              onClick={(e) => openCreateIdConfirm(e, member.id)}
+                              className="inline-flex items-center gap-1 px-2.5 py-2 min-h-[44px] text-sm font-semibold bg-primary text-white hover:bg-primary-dark border border-primary"
+                            >
+                              Create
+                            </button>
+                          )}
+                          <div
+                            className="relative"
+                            ref={
+                              actionMenuOpen === member.id
+                                ? actionMenuRef
+                                : undefined
+                            }
+                          >
+                            <button
+                              type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setActionMenuOpen(null);
-                                openDelete(e, member.id);
+                                setActionMenuOpen((id) =>
+                                  id === member.id ? null : member.id,
+                                );
                               }}
+                              className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-text-secondary hover:text-primary hover:bg-primary/10 rounded"
+                              aria-label="Actions"
+                              aria-expanded={actionMenuOpen === member.id}
                             >
-                              <Trash2 size={16} />
-                              Delete
+                              <MoreVertical size={20} />
                             </button>
+                            {actionMenuOpen === member.id && (
+                              <div className="absolute right-0 top-full mt-1 z-20 min-w-[180px] py-1 bg-surface-light border border-[#333] shadow-lg rounded">
+                                <button
+                                  type="button"
+                                  className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActionMenuOpen(null);
+                                    navigate({
+                                      to: "/members/$memberId",
+                                      params: { memberId: member.id },
+                                    });
+                                  }}
+                                >
+                                  <Eye size={16} />
+                                  View
+                                </button>
+                                <button
+                                  type="button"
+                                  className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActionMenuOpen(null);
+                                    openEdit(e, member);
+                                  }}
+                                >
+                                  <Pencil size={16} />
+                                  Edit
+                                </button>
+                                <Link
+                                  to="/id-card-studio"
+                                  search={{ memberId: member.id }}
+                                  className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-text-main hover:bg-surface-gray flex items-center gap-2"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActionMenuOpen(null);
+                                  }}
+                                >
+                                  <IdCard size={16} />
+                                  {member.id_card_created
+                                    ? "View ID Card"
+                                    : "Create ID Card"}
+                                </Link>
+                                <button
+                                  type="button"
+                                  className="w-full px-4 py-3 min-h-[44px] text-left text-sm font-medium text-danger hover:bg-danger/10 flex items-center gap-2"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActionMenuOpen(null);
+                                    openDelete(e, member.id);
+                                  }}
+                                >
+                                  <Trash2 size={16} />
+                                  Delete
+                                </button>
+                              </div>
+                            )}
                           </div>
-                        )}
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         </div>
 
@@ -1147,46 +1153,20 @@ function Members() {
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50"
           onClick={closeCreateIdFlow}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="create-id-dialog-title"
         >
           <div
-            className="bg-surface-light shadow-xl max-w-sm w-full p-6"
+            className="bg-surface-light shadow-xl max-w-sm w-full p-6 rounded-lg"
             onClick={(e) => e.stopPropagation()}
           >
-            <p className="text-text-main font-medium text-base mb-4">
+            <p
+              id="create-id-dialog-title"
+              className="text-text-main font-medium text-base mb-4"
+            >
               Create ID card for this member? You will set it up in the ID Card
               Studio.
-            </p>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={closeCreateIdFlow}
-                className="btn-secondary flex-1 min-h-[44px] text-base"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={() => setCreateIdStep("navigate")}
-                className="flex-1 min-h-[44px] bg-primary text-white font-bold text-base hover:bg-primary-dark flex items-center justify-center gap-2"
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {createIdMemberId && createIdStep === "navigate" && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50"
-          onClick={closeCreateIdFlow}
-        >
-          <div
-            className="bg-surface-light shadow-xl max-w-sm w-full p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p className="text-text-main font-medium text-base mb-4">
-              Go to ID Card Studio to set up the ID card for this member?
             </p>
             <div className="flex gap-3">
               <button
@@ -1207,7 +1187,7 @@ function Members() {
                 }}
                 className="flex-1 min-h-[44px] bg-primary text-white font-bold text-base hover:bg-primary-dark flex items-center justify-center gap-2"
               >
-                Go to ID Card Studio
+               Card Studio
               </button>
             </div>
           </div>

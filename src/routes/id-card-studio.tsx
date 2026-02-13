@@ -9,7 +9,7 @@ import {
   membersQueryKey,
 } from "../lib/api/members";
 import type { Member } from "../lib/supabase";
-import { Check, ArrowLeft } from "lucide-react";
+import { Check, ArrowLeft, SlidersHorizontal } from "lucide-react";
 
 export const Route = createFileRoute("/id-card-studio")({
   component: IDCardStudio,
@@ -78,6 +78,7 @@ function MemberSelectorSection({
   const end = Math.min(start + PAGE_SIZE, totalCount);
   const hasPrev = page > 1;
   const hasNext = page < totalPages;
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-4 flex-1 min-w-0">
@@ -87,8 +88,9 @@ function MemberSelectorSection({
             {sectionTitle}
           </h3>
         ) : null}
-        <div className="flex flex-wrap items-center justify-end gap-3 min-w-0 flex-1">
-          <div className="relative bg-white border border-gray-200 h-11 flex items-center px-4 w-full min-w-[200px] max-w-[280px] sm:max-w-[320px]">
+        {/* Mobile: search left + filter icon right (same as members page); icon opens bottom sheet */}
+        <div className="flex md:hidden items-stretch gap-3 w-full min-w-0 flex-1">
+          <div className="relative bg-surface-light h-11 flex items-center px-4 flex-1 min-w-0 rounded border border-[#333]">
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">
               search
             </span>
@@ -100,46 +102,126 @@ function MemberSelectorSection({
               onChange={(e) => onSearchChange(e.target.value)}
             />
           </div>
-          <div className="relative">
-            <select
-              value={filterStatus}
-              onChange={(e) => onFilterStatusChange(e.target.value)}
-              className="h-11 min-w-[120px] pl-3 pr-8 bg-white border border-gray-200 text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 appearance-none cursor-pointer"
-              aria-label="Filter by status"
-            >
-              <option value="">Status: All</option>
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
-            <span className="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">
-              expand_more
+          <button
+            type="button"
+            onClick={() => setFilterSheetOpen(true)}
+            className="h-11 w-11 min-w-11 shrink-0 flex items-center justify-center rounded border border-[#333] bg-surface-light text-text-main hover:bg-surface-gray focus:outline-none focus:ring-2 focus:ring-primary/30"
+            aria-label="Open filters"
+            aria-expanded={filterSheetOpen}
+          >
+            <SlidersHorizontal size={20} />
+          </button>
+        </div>
+        {/* Desktop: search + status + sort inline (same styling as members page filters) */}
+        <div className="hidden md:flex flex-wrap items-center justify-end gap-3 min-w-0 flex-1">
+          <div className="relative bg-surface-light h-11 flex items-center px-4 w-full min-w-[200px] max-w-[320px] shrink-0">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">
+              search
             </span>
+            <input
+              className="block w-full pl-9 pr-4 py-0 h-full bg-transparent border-none text-base text-text-main placeholder-text-muted focus:ring-0"
+              placeholder="Search name, email..."
+              type="text"
+              value={search}
+              onChange={(e) => onSearchChange(e.target.value)}
+            />
           </div>
-          <div className="relative">
-            <select
-              value={`${sortBy}-${sortOrder}`}
-              onChange={(e) => {
-                const [field, order] = e.target.value.split("-") as [
-                  SortField,
-                  "asc" | "desc",
-                ];
-                onSortByChange(field);
-                onSortOrderChange(order);
-              }}
-              className="h-11 min-w-[160px] pl-3 pr-8 bg-white border border-gray-200 text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 appearance-none cursor-pointer"
-              aria-label="Sort"
-            >
-              <option value="name-asc">Name (A–Z)</option>
-              <option value="name-desc">Name (Z–A)</option>
-              <option value="created_at-desc">Created (newest)</option>
-              <option value="created_at-asc">Created (oldest)</option>
-            </select>
-            <span className="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">
-              expand_more
-            </span>
-          </div>
+          <select
+            value={filterStatus}
+            onChange={(e) => onFilterStatusChange(e.target.value)}
+            className="h-11 min-w-[120px] px-3 bg-surface-light border border-[#333] text-text-main text-sm rounded focus:outline-none focus:ring-2 focus:ring-primary/30"
+            aria-label="Filter by status"
+          >
+            <option value="">Status: All</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+          <select
+            value={`${sortBy}-${sortOrder}`}
+            onChange={(e) => {
+              const [field, order] = e.target.value.split("-") as [
+                SortField,
+                "asc" | "desc",
+              ];
+              onSortByChange(field);
+              onSortOrderChange(order);
+            }}
+            className="h-11 min-w-[160px] px-3 bg-surface-light border border-[#333] text-text-main text-sm rounded focus:outline-none focus:ring-2 focus:ring-primary/30"
+            aria-label="Sort"
+          >
+            <option value="name-asc">Name (A–Z)</option>
+            <option value="name-desc">Name (Z–A)</option>
+            <option value="created_at-desc">Created (newest)</option>
+            <option value="created_at-asc">Created (oldest)</option>
+          </select>
         </div>
       </div>
+
+      {/* Mobile bottom sheet: filters */}
+      {filterSheetOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/50 md:hidden"
+            onClick={() => setFilterSheetOpen(false)}
+            aria-hidden
+          />
+          <div
+            className="fixed inset-x-0 bottom-0 z-50 md:hidden bg-surface-light border-t border-[#333] rounded-t-2xl shadow-lg p-6 pb-[env(safe-area-inset-bottom,1rem)]"
+            role="dialog"
+            aria-label="Filters"
+          >
+            <div className="w-10 h-1 rounded-full bg-surface-gray mx-auto mb-4" />
+            <h4 className="text-text-main font-bold text-base mb-4">Filters</h4>
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="block text-sm font-bold text-text-secondary uppercase tracking-wider mb-1">
+                  Status
+                </label>
+                <select
+                  value={filterStatus}
+                  onChange={(e) => onFilterStatusChange(e.target.value)}
+                  className="h-11 w-full px-3 bg-surface-light border border-[#333] text-text-main text-sm rounded focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  aria-label="Filter by status"
+                >
+                  <option value="">Status: All</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-text-secondary uppercase tracking-wider mb-1">
+                  Sort
+                </label>
+                <select
+                  value={`${sortBy}-${sortOrder}`}
+                  onChange={(e) => {
+                    const [field, order] = e.target.value.split("-") as [
+                      SortField,
+                      "asc" | "desc",
+                    ];
+                    onSortByChange(field);
+                    onSortOrderChange(order);
+                  }}
+                  className="h-11 w-full px-3 bg-surface-light border border-[#333] text-text-main text-sm rounded focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  aria-label="Sort"
+                >
+                  <option value="name-asc">Name (A–Z)</option>
+                  <option value="name-desc">Name (Z–A)</option>
+                  <option value="created_at-desc">Created (newest)</option>
+                  <option value="created_at-asc">Created (oldest)</option>
+                </select>
+              </div>
+              <button
+                type="button"
+                onClick={() => setFilterSheetOpen(false)}
+                className="mt-2 h-11 w-full rounded font-semibold bg-primary text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary/30"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </>
+      )}
       <div className="min-h-[280px]">
         {members.length === 0 ? (
           <p className="text-text-muted text-sm py-8 text-center">
@@ -365,7 +447,6 @@ function IDCardStudio() {
 
             <div>
               <MemberSelectorSection
-                sectionTitle="Members with ID card"
                 members={paginatedMembers}
                 selectedMemberId={undefined}
                 search={search}
@@ -410,7 +491,6 @@ function IDCardStudio() {
             </div>
             <div>
               <MemberSelectorSection
-                sectionTitle="Members with ID card"
                 members={paginatedMembers}
                 selectedMemberId={undefined}
                 search={search}
