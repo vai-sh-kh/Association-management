@@ -428,215 +428,63 @@ function IDCardStudio() {
         )}
 
         {(isLoading || member) && memberId && (
-          <div className="grid grid-cols-12 gap-5">
+          <div className="flex flex-col items-center justify-center min-h-[400px]">
             {isLoading ? (
-              <div className="col-span-12 card">
-                <div className="h-64 flex items-center justify-center text-text-muted animate-pulse">
-                  Loading member...
-                </div>
-              </div>
+              <div className="text-text-muted animate-pulse">Loading card...</div>
             ) : member ? (
               <>
-                {/* Left column - same as Dashboard main content (8 cols) */}
-                <div className="col-span-12 lg:col-span-8 flex flex-col gap-5">
-                  <div className="card">
-                    <div className="flex justify-between items-center mb-6">
-                      <div>
-                        <h3 className="text-text-main font-bold text-lg mb-1">
-                          Credential details
-                        </h3>
-                        <p className="text-text-secondary text-sm">
-                          Configure access and identity for this member.
-                        </p>
-                      </div>
+                <div className="flex flex-col items-center justify-center w-full max-w-[280px]">
+                  <div className="relative w-full overflow-hidden flex flex-col bg-surface-light border border-[#333] shadow-sm">
+                    <div className="h-28 bg-primary p-4 flex justify-between items-start text-white">
+                      <span className="font-bold text-[10px] tracking-wider uppercase">
+                        Association
+                      </span>
+                      <span className="text-[10px] font-bold uppercase bg-white/20 px-2 py-0.5">
+                        Member
+                      </span>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-sm font-medium text-text-secondary mb-1">
-                          Member name
-                        </label>
-                        <input
-                          className="w-full h-11 px-4 bg-surface-gray text-text-main font-medium border border-[#333]"
-                          readOnly
-                          value={displayName}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-text-secondary mb-1">
-                          Unit
-                        </label>
-                        <input
-                          className="w-full h-11 px-4 bg-surface-gray text-text-main font-medium border border-[#333]"
-                          readOnly
-                          value={unitLabel}
-                        />
-                      </div>
-                    </div>
-                    <div className="mt-5">
-                      <label className="block text-sm font-medium text-text-secondary mb-1">
-                        Member photo
-                      </label>
-                      <div className="flex items-center gap-4 p-4 bg-surface-gray border border-[#333]">
-                        <div className="h-16 w-16 shrink-0 overflow-hidden bg-background-light flex items-center justify-center">
-                          {avatarUrl ? (
-                            <img
-                              alt=""
-                              className="h-full w-full object-cover"
-                              src={avatarUrl}
-                            />
-                          ) : (
-                            <span className="text-primary font-bold text-xl">
-                              {initialsStr}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <span className="text-sm font-medium text-text-main">
-                            Replace photo
+                    <div className="flex flex-col items-center px-6 pb-6 -mt-10">
+                      <div className="h-20 w-20 overflow-hidden bg-surface-gray flex items-center justify-center">
+                        {avatarUrl ? (
+                          <img
+                            alt=""
+                            className="h-full w-full object-cover"
+                            src={avatarUrl}
+                          />
+                        ) : (
+                          <span className="text-primary font-bold text-2xl">
+                            {initialsStr}
                           </span>
-                          <span className="block text-xs text-text-muted">
-                            JPG, PNG (max 5MB)
-                          </span>
-                        </div>
-                        <span className="material-symbols-outlined text-text-secondary text-[20px]">
-                          cloud_upload
-                        </span>
+                        )}
                       </div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5">
-                      <div>
-                        <label className="block text-sm font-medium text-text-secondary mb-1">
-                          Access level
-                        </label>
-                        <select className="w-full h-11 px-4 bg-surface-gray text-text-main font-medium border border-[#333]">
-                          <option>All Amenities</option>
-                          <option>Gym Only</option>
-                          <option>Gate Only</option>
-                          <option>Clubhouse & Pool</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-text-secondary mb-1">
-                          Valid until
-                        </label>
-                        <input
-                          className="w-full h-11 px-4 bg-surface-gray text-text-main font-medium border border-[#333]"
-                          type="date"
-                          defaultValue="2024-12-31"
+                      <p className="mt-3 text-lg font-bold text-text-main tracking-tight text-center">
+                        {displayName}
+                      </p>
+                      <p className="text-sm text-text-secondary mt-0.5">
+                        {unitLabel}
+                      </p>
+                      <p className="mt-3 text-xs font-semibold text-primary uppercase tracking-wider">
+                        All Amenities Access
+                      </p>
+                      <div className="mt-4 p-2 bg-surface-gray">
+                        <img
+                          alt="QR"
+                          className="h-16 w-16"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6HA8CUcBOCRJAHfQJOxSdV2gO_s-Op6h2k13anBOTSid0Tc6aE9fO26s4_0qlSYCSYy1_0PLlxgcTqWNu3qGzfNmAljUdMTWmTnQ3zd3o5C1CArXYuMO29UZZU2VVYrxXUR8KMMQj2u8K7KnyadHItpiOEBbOeTDNh-iqDMLRwMBRrYf42THxxhF9exhDvgjg43Fl8krhXoa_tHcemzyt3a519Kwf-vQ28IBSV0uWfUwXmjQbCGa1d-hWro9zl4p3wiUX835wcNnV"
                         />
                       </div>
-                    </div>
-                    <div className="mt-5">
-                      <label className="block text-sm font-medium text-text-secondary mb-1">
-                        Internal notes
-                      </label>
-                      <textarea
-                        className="w-full min-h-[80px] p-4 bg-surface-gray text-text-main text-sm border border-[#333] resize-y"
-                        placeholder="Notes about this credential..."
-                      />
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-6 border-t border-surface-gray/80">
-                      <button
-                        type="button"
-                        onClick={handleDownloadPdf}
-                        disabled={markIdCreatedMutation.isPending}
-                        className="flex-1 h-11 bg-surface-gray text-text-main font-semibold border border-[#333] hover:bg-surface-gray/80 disabled:opacity-50"
-                      >
-                        Download PDF
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleIssueMobilePass}
-                        disabled={markIdCreatedMutation.isPending}
-                        className="flex-[1.5] h-11 bg-primary text-white font-bold hover:bg-primary-dark flex items-center justify-center gap-2 disabled:opacity-50"
-                      >
-                        <span className="material-symbols-outlined text-[18px]">
-                          send_to_mobile
-                        </span>
-                        {markIdCreatedMutation.isPending
-                          ? "Saving..."
-                          : "Issue mobile pass"}
-                      </button>
+                      <p className="text-[10px] text-text-muted mt-2 uppercase tracking-wide">
+                        Scan for entry
+                      </p>
                     </div>
                   </div>
                 </div>
-
-                {/* Right column - same as Dashboard sidebar (4 cols) */}
-                <div className="col-span-12 lg:col-span-4 flex flex-col gap-5">
-                  <div>
-                    <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-text-main font-bold text-lg">
-                        Members with ID card
-                      </h3>
-                    </div>
-                    <MemberSelectorSection
-                      members={paginatedMembers}
-                      selectedMemberId={memberId}
-                      search={search}
-                      onSearchChange={setSearch}
-                      filterStatus={filterStatus}
-                      onFilterStatusChange={setFilterStatus}
-                      sortBy={sortBy}
-                      sortOrder={sortOrder}
-                      onSortByChange={setSortBy}
-                      onSortOrderChange={setSortOrder}
-                      page={page}
-                      totalCount={filteredAndSortedMembers.length}
-                      onPageChange={setPage}
-                    />
-                  </div>
-                  <div className="card">
-                    <h3 className="text-text-main font-bold text-lg mb-6">
-                      Live preview
-                    </h3>
-                    <div className="flex flex-col items-center justify-center py-6 w-full max-w-[280px] mx-auto">
-                      <div className="relative w-full overflow-hidden flex flex-col bg-surface-light border border-[#333] shadow-sm">
-                        <div className="h-28 bg-primary p-4 flex justify-between items-start text-white">
-                          <span className="font-bold text-[10px] tracking-wider uppercase">
-                            Association
-                          </span>
-                          <span className="text-[10px] font-bold uppercase bg-white/20 px-2 py-0.5">
-                            Member
-                          </span>
-                        </div>
-                        <div className="flex flex-col items-center px-6 pb-6 -mt-10">
-                          <div className="h-20 w-20 overflow-hidden bg-surface-gray flex items-center justify-center">
-                            {avatarUrl ? (
-                              <img
-                                alt=""
-                                className="h-full w-full object-cover"
-                                src={avatarUrl}
-                              />
-                            ) : (
-                              <span className="text-primary font-bold text-2xl">
-                                {initialsStr}
-                              </span>
-                            )}
-                          </div>
-                          <p className="mt-3 text-lg font-bold text-text-main tracking-tight text-center">
-                            {displayName}
-                          </p>
-                          <p className="text-sm text-text-secondary mt-0.5">
-                            {unitLabel}
-                          </p>
-                          <p className="mt-3 text-xs font-semibold text-primary uppercase tracking-wider">
-                            All Amenities Access
-                          </p>
-                          <div className="mt-4 p-2 bg-surface-gray">
-                            <img
-                              alt="QR"
-                              className="h-16 w-16"
-                              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6HA8CUcBOCRJAHfQJOxSdV2gO_s-Op6h2k13anBOTSid0Tc6aE9fO26s4_0qlSYCSYy1_0PLlxgcTqWNu3qGzfNmAljUdMTWmTnQ3zd3o5C1CArXYuMO29UZZU2VVYrxXUR8KMMQj2u8K7KnyadHItpiOEBbOeTDNh-iqDMLRwMBRrYf42THxxhF9exhDvgjg43Fl8krhXoa_tHcemzyt3a519Kwf-vQ28IBSV0uWfUwXmjQbCGa1d-hWro9zl4p3wiUX835wcNnV"
-                            />
-                          </div>
-                          <p className="text-[10px] text-text-muted mt-2 uppercase tracking-wide">
-                            Scan for entry
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <Link
+                  to="/id-card-studio"
+                  className="mt-8 text-sm font-semibold text-primary hover:underline"
+                >
+                  Back to ID Card Studio
+                </Link>
               </>
             ) : null}
           </div>

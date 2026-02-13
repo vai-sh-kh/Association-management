@@ -6,6 +6,7 @@ import MemberFormSheet from "../components/members/MemberFormSheet";
 import {
   fetchMemberById,
   updateMember,
+  deleteMember,
   memberQueryKey,
   membersQueryKey,
   type MemberUpdate,
@@ -18,6 +19,8 @@ import {
 import { fetchPaymentsByMemberId, paymentsQueryKey } from "../lib/api/payments";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatPhoneDisplay } from "../constants/countryCodes";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/members/$memberId")({
   component: MemberProfilePage,
@@ -65,6 +68,7 @@ function MemberProfilePage() {
   >("overview");
   const [editModal, setEditModal] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
 
   const {
     data: member,
@@ -103,6 +107,19 @@ function MemberProfilePage() {
       setFormError(null);
     },
     onError: (err: Error) => setFormError(err.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteMember(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: membersQueryKey });
+      setDeleteConfirm(false);
+      toast.success("Member removed successfully");
+      navigate({ to: "/members" });
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Failed to remove member");
+    },
   });
 
   if (isLoading) {
@@ -220,25 +237,50 @@ function MemberProfilePage() {
               </div>
             </div>
 
-            <div className="flex gap-4 w-full justify-center">
+            <div className="flex flex-wrap gap-3 w-full justify-center">
               <button
                 type="button"
                 onClick={() => setEditModal(true)}
-                className="w-12 h-12 bg-background-light text-primary hover:bg-primary hover:text-white flex items-center justify-center"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-background-light text-primary hover:bg-primary hover:text-white font-medium text-sm"
               >
                 <span className="material-symbols-outlined text-[20px]">
                   edit
                 </span>
+                Edit
               </button>
-              <Link
-                to="/id-card-studio"
-                search={{ memberId }}
-                className="w-12 h-12 bg-background-light text-primary hover:bg-primary hover:text-white flex items-center justify-center"
+              {member.id_card_created ? (
+                <Link
+                  to="/id-card-studio"
+                  search={{ memberId }}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-background-light text-primary hover:bg-primary hover:text-white font-medium text-sm"
+                >
+                  <span className="material-symbols-outlined text-[20px]">
+                    badge
+                  </span>
+                  View ID Card
+                </Link>
+              ) : (
+                <Link
+                  to="/id-card-studio"
+                  search={{ memberId }}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-background-light text-primary hover:bg-primary hover:text-white font-medium text-sm"
+                >
+                  <span className="material-symbols-outlined text-[20px]">
+                    add_card
+                  </span>
+                  Create ID
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={() => setDeleteConfirm(true)}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-danger/10 text-danger hover:bg-danger hover:text-white font-medium text-sm"
               >
                 <span className="material-symbols-outlined text-[20px]">
-                  badge
+                  delete
                 </span>
-              </Link>
+                Delete
+              </button>
             </div>
           </div>
 
@@ -705,6 +747,47 @@ function MemberProfilePage() {
           }}
           error={formError}
         />
+      )}
+
+      {deleteConfirm && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50"
+          onClick={() => setDeleteConfirm(false)}
+        >
+          <div
+            className="bg-surface-light shadow-xl max-w-sm w-full p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-text-main font-medium text-base mb-4">
+              Remove this resident? This will also delete their vehicles,
+              payments, and documents.
+            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setDeleteConfirm(false)}
+                className="btn-secondary flex-1 min-h-[44px] text-base"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => deleteMutation.mutate(memberId)}
+                disabled={deleteMutation.isPending}
+                className="flex-1 min-h-[44px] bg-danger text-white font-bold text-base disabled:opacity-50 hover:bg-red-800 flex items-center justify-center gap-2"
+              >
+                {deleteMutation.isPending ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin shrink-0" />
+                    Removing...
+                  </>
+                ) : (
+                  "Remove"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </Layout>
   );

@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "../components/layout/Layout";
 import { ResponsiveContainer, Tooltip, PieChart, Pie, Cell } from "recharts";
-import { Users, UserCheck, UserX, IdCard } from "lucide-react";
+import { Users, UserCheck, UserX, IdCard, Eye } from "lucide-react";
 import {
   fetchDashboardStats,
   fetchRecentMembers,
@@ -55,6 +55,27 @@ function Dashboard() {
       color: "text-primary",
     },
   ];
+
+  const formatCreatedDate = (dateStr: string | null) => {
+    if (!dateStr) return "—";
+    try {
+      return new Date(dateStr).toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    } catch {
+      return "—";
+    }
+  };
+
+  const initials = (name: string) =>
+    name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
 
   const idCardPieData = [
     { name: "ID Created", value: idCreatedCount, color: "#1e3a5f" },
@@ -167,14 +188,30 @@ function Dashboard() {
                             });
                           }
                         }}
-                        className="flex items-center justify-between gap-3 py-4 first:pt-0 cursor-pointer hover:bg-surface-gray/50 transition-colors"
+                        className="flex items-center gap-3 py-4 first:pt-0 cursor-pointer hover:bg-surface-gray/50 transition-colors"
                       >
+                        <div className="shrink-0 h-10 w-10 overflow-hidden bg-surface-gray flex items-center justify-center">
+                          {member.avatar_url ? (
+                            <img
+                              alt=""
+                              className="h-10 w-10 object-cover"
+                              src={member.avatar_url}
+                            />
+                          ) : (
+                            <span className="text-primary font-bold text-sm">
+                              {initials(member.name ?? "")}
+                            </span>
+                          )}
+                        </div>
                         <div className="min-w-0 flex-1">
                           <span className="font-medium text-text-main truncate block">
                             {member.name ?? "—"}
                           </span>
-                          <span className="text-xs text-text-muted">
+                          <span className="text-xs text-text-muted block">
                             {member.member_id ?? "—"}
+                          </span>
+                          <span className="text-xs text-text-muted block mt-0.5">
+                            Created {formatCreatedDate(member.created_at)}
                           </span>
                         </div>
                         <span
@@ -186,6 +223,20 @@ function Dashboard() {
                         >
                           {member.status}
                         </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate({
+                              to: "/members/$memberId",
+                              params: { memberId: member.id },
+                            });
+                          }}
+                          className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] text-sm font-semibold bg-primary text-white hover:bg-primary-dark transition-colors"
+                        >
+                          <Eye size={16} />
+                          View
+                        </button>
                         <Link
                           to="/id-card-studio"
                           search={{ memberId: member.id }}
