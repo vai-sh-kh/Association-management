@@ -6,7 +6,17 @@ import React, {
   useState,
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
+import { IS_DEMO, DEMO_USER_ID, DEMO_USER_EMAIL } from "../constants/demo";
 import { supabase } from "../lib/supabase";
+
+const DEMO_USER = {
+  id: DEMO_USER_ID,
+  email: DEMO_USER_EMAIL,
+  app_metadata: {},
+  user_metadata: {},
+  aud: "authenticated",
+  created_at: "",
+} as unknown as User;
 
 interface AuthState {
   user: User | null;
@@ -29,6 +39,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
+    if (IS_DEMO) {
+      setState({ user: DEMO_USER, session: null, loading: false });
+      return;
+    }
     supabase.auth.getSession().then(({ data: { session } }) => {
       setState({ user: session?.user ?? null, session, loading: false });
     });
@@ -43,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
+    if (IS_DEMO) return { error: null };
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -51,6 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = useCallback(async () => {
+    if (IS_DEMO) return;
     await supabase.auth.signOut();
   }, []);
 
