@@ -1,13 +1,21 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import Layout from "../components/layout/Layout";
+import MemberFormSheet from "../components/members/MemberFormSheet";
 import { ResponsiveContainer, Tooltip, PieChart, Pie, Cell } from "recharts";
-import { Users, UserCheck, UserX, IdCard, Eye } from "lucide-react";
+import { Users, UserCheck, UserX, IdCard, Eye, UserPlus } from "lucide-react";
 import {
   fetchDashboardStats,
   fetchRecentMembers,
   dashboardQueryKey,
 } from "../lib/api/dashboard";
+import {
+  createMember,
+  membersQueryKey,
+  type MemberInsert,
+} from "../lib/api/members";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -15,6 +23,24 @@ export const Route = createFileRoute("/")({
 
 function Dashboard() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [showAddMember, setShowAddMember] = useState(false);
+  const [addMemberError, setAddMemberError] = useState<string | null>(null);
+
+  const createMemberMutation = useMutation({
+    mutationFn: (data: MemberInsert) => createMember(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: membersQueryKey });
+      queryClient.invalidateQueries({ queryKey: dashboardQueryKey });
+      setShowAddMember(false);
+      setAddMemberError(null);
+      toast.success("Member created successfully");
+    },
+    onError: (err: Error) => {
+      setAddMemberError(err.message ?? "Failed to create member");
+    },
+  });
+
   const { data: dashboardStats, isLoading: statsLoading } = useQuery({
     queryKey: dashboardQueryKey,
     queryFn: fetchDashboardStats,
@@ -91,12 +117,28 @@ function Dashboard() {
       <div className="flex flex-col gap-6">
         {/* Header */}
         <div className="card">
-          <h1 className="text-text-main text-2xl md:text-3xl font-bold mb-1 tracking-tight">
-            Dashboard
-          </h1>
-          <p className="text-text-secondary text-sm">
-            Welcome back. Here's what's happening with your association today.
-          </p>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h1 className="text-text-main text-2xl md:text-3xl font-bold mb-1 tracking-tight">
+                Dashboard
+              </h1>
+              <p className="text-text-secondary text-sm">
+                Welcome back. Here's what's happening with your association
+                today.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setAddMemberError(null);
+                setShowAddMember(true);
+              }}
+              className="shrink-0 inline-flex items-center gap-2 min-h-[44px] px-4 bg-primary text-white font-semibold text-sm hover:bg-primary-dark transition-colors"
+            >
+              <UserPlus size={16} />
+              <span className="hidden sm:inline">Add Member</span>
+            </button>
+          </div>
         </div>
 
         {/* Stats Row: 2 per row on mobile, 4 on large */}
@@ -312,6 +354,21 @@ function Dashboard() {
           </div>
         </div>
       </div>
+
+      {showAddMember && (
+        <MemberFormSheet
+          mode="create"
+          member={null}
+          onClose={() => {
+            setShowAddMember(false);
+            setAddMemberError(null);
+          }}
+          onSubmit={async (data) => {
+            await createMemberMutation.mutateAsync(data as MemberInsert);
+          }}
+          error={addMemberError}
+        />
+      )}
     </Layout>
   );
 }
